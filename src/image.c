@@ -90,7 +90,7 @@ int main (int    argc, char **argv)
   gtk_layout_put(GTK_LAYOUT(layout), vbox, 0, 0);
 
 // show image
-  image = gtk_image_new_from_file ("sails.bmp");
+  image = gtk_image_new_from_file ("../img/test.bmp");
   gtk_layout_put(GTK_LAYOUT(layout), image, 0, 80);
 
   gtk_widget_show_all(window);
