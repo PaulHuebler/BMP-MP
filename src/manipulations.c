@@ -28,8 +28,13 @@ void manipulate(char path[], uint8_t manipulation, int opt1, int opt2) {
         case 11:    brightness(pixels, widthPx * heightPx, opt1);
                     break;
 
-        case 12:    grayscale(pixels, widthPx * heightPx);
+        case 12:    saturation(pixels, widthPx * heightPx, opt1);
                     break;
+
+        case 13:    grayscale(pixels, widthPx * heightPx);
+                    break;
+
+        
 
         default:    printf("Die geforderte Manipulation steht noch nicht zur Verfügung.\n");
     }
@@ -67,6 +72,25 @@ static void brightness(bitmap_pixel_hsv_t* pixels, uint32_t count, int value)
 			}
 			else {
 				pix->v = (pix->v + value);
+			}
+		}	
+}
+
+static void saturation(bitmap_pixel_hsv_t* pixels, uint32_t count, int value)
+{
+		for (uint32_t x = 0; x < count; x++)
+		{
+
+			bitmap_pixel_hsv_t* pix = &pixels[x];
+
+			if ((pix->s + value) > 255) {
+				pix->s = 255;
+			} 
+			else if ((pix->s + value) < 0) {
+				pix->s = 0;
+			}
+			else {
+				pix->s = (pix->s + value);
 			}
 		}	
 }
