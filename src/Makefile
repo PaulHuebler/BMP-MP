@@ -21,4 +21,4 @@ bmp-mp: $(OBJ)
 .PHONY: clean
 
 clean:
-	rm -f *.o *~ core $(INCDIR)/*~ 
+	rm -f *.o *~ core $(INCDIR)/*~ bmp-mp
