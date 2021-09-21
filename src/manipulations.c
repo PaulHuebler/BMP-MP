@@ -6,40 +6,19 @@
 #include "../include/bitmap.h"
 #include "../include/manipulations.h"
 
-void manipulate(char path[], uint8_t manipulation, int opt1, int opt2) {
+bitmap_pixel_hsv_t* pixels;
+uint32_t widthPx, heightPx;
+bitmap_error_t error;
 
-    bitmap_color_space_t colorspace;
+void loadHSV(char path[]) {
 
-    //Die Manipulationen mit dem Index 1 bis 10 nutzen den RGB-Farbraum, die restlichen den HSV-Farbraum.
-    if (manipulation <= 10) {
-        colorspace = BITMAP_COLOR_SPACE_RGB;
-    } else {
-        colorspace = BITMAP_COLOR_SPACE_HSV;
-    }
-
-    bitmap_pixel_hsv_t* pixels;
-	uint32_t widthPx, heightPx;
-
-	bitmap_error_t error = bitmapReadPixels(path, (bitmap_pixel_t**)&pixels, &widthPx, &heightPx, colorspace);
+	error = bitmapReadPixels(path, (bitmap_pixel_t**)&pixels, &widthPx, &heightPx, BITMAP_COLOR_SPACE_HSV);
 	assert(error == BITMAP_ERROR_SUCCESS);
+}
 
-    switch(manipulation) {
+void saveHSV(char path[]) {
 
-        case 11:    brightness(pixels, widthPx * heightPx, opt1);
-                    break;
-
-        case 12:    saturation(pixels, widthPx * heightPx, opt1);
-                    break;
-
-        case 13:    grayscale(pixels, widthPx * heightPx);
-                    break;
-
-        
-
-        default:    printf("Die geforderte Manipulation steht noch nicht zur Verfügung.\n");
-    }
-
-    bitmap_parameters_t params;
+	bitmap_parameters_t params;
 
 	params.bottomUp = BITMAP_BOOL_TRUE;
 	params.widthPx = widthPx;
@@ -47,9 +26,9 @@ void manipulate(char path[], uint8_t manipulation, int opt1, int opt2) {
 	params.colorDepth = BITMAP_COLOR_DEPTH_24;
 	params.compression = BITMAP_COMPRESSION_NONE;
 	params.dibHeaderFormat = BITMAP_DIB_HEADER_INFO;
-	params.colorSpace = colorspace;
+	params.colorSpace = BITMAP_COLOR_SPACE_HSV;
 
-    error = bitmapWritePixels("../img/result.bmp", BITMAP_BOOL_TRUE, &params, (bitmap_pixel_t*)pixels);
+    error = bitmapWritePixels(path, BITMAP_BOOL_TRUE, &params, (bitmap_pixel_t*)pixels);
 	assert(error == BITMAP_ERROR_SUCCESS);
 
 	//Free the pixel array:
@@ -57,8 +36,12 @@ void manipulate(char path[], uint8_t manipulation, int opt1, int opt2) {
 
 }
 
-static void brightness(bitmap_pixel_hsv_t* pixels, uint32_t count, int value)
+void brightness(char input_path[], char output_path[], int value)
 {
+
+	loadHSV(input_path);
+	uint32_t count = heightPx * widthPx;
+
 		for (uint32_t x = 0; x < count; x++)
 		{
 
@@ -74,10 +57,15 @@ static void brightness(bitmap_pixel_hsv_t* pixels, uint32_t count, int value)
 				pix->v = (pix->v + value);
 			}
 		}	
+		
+	saveHSV(output_path);
 }
 
-static void saturation(bitmap_pixel_hsv_t* pixels, uint32_t count, int value)
+void saturation(char input_path[], char output_path[], int value)
 {
+	loadHSV(input_path);
+	uint32_t count = heightPx * widthPx;
+
 		for (uint32_t x = 0; x < count; x++)
 		{
 
@@ -93,10 +81,15 @@ static void saturation(bitmap_pixel_hsv_t* pixels, uint32_t count, int value)
 				pix->s = (pix->s + value);
 			}
 		}	
+
+	saveHSV(output_path);
 }
 
-static void grayscale(bitmap_pixel_hsv_t* pixels, uint32_t count)
+void grayscale(char input_path[], char output_path[])
 {
+	loadHSV(input_path);
+	uint32_t count = heightPx * widthPx;
+
 		for (uint32_t x = 0; x < count; x++)
 		{
 
@@ -104,4 +97,6 @@ static void grayscale(bitmap_pixel_hsv_t* pixels, uint32_t count)
 
 			pix->s = 0;
 		}	
+
+	saveHSV(output_path);
 }

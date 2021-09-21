@@ -1,12 +1,18 @@
 #ifndef MANIPULATIONS_H_
 #define MANIPULATIONS_H_
 
-void manipulate(char[], uint8_t, int, int);
+bitmap_pixel_hsv_t* pixels;
+uint32_t widthPx, heightPx;
+bitmap_error_t error;
 
-static void brightness(bitmap_pixel_hsv_t*, uint32_t, int);
+void loadHSV(char[]);
 
-static void saturation(bitmap_pixel_hsv_t*, uint32_t, int);
+void saveHSV(char[]);
 
-static void grayscale(bitmap_pixel_hsv_t*, uint32_t);
+void brightness(char[], char[], int);
+
+void saturation(char[], char[], int);
+
+void grayscale(char[], char[]);
 
 #endif
