@@ -6,10 +6,10 @@ PACKAGE = `pkg-config --cflags --libs gtk+-3.0`
 
 LIBS=
 
-_DEPS = bitmap.h
+_DEPS = bitmap.h manipulations.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = bitmap.o image.o
+_OBJ = bitmap.o image.o manipulations.o
 OBJ = $(patsubst %,%,$(_OBJ))
 
 %.o: %.c $(DEPS)
