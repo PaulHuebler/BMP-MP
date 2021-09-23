@@ -20,6 +20,8 @@ void saturation(char[], char[], int);
 
 void grayscale(char[], char[]);
 
-void red(char[], char[]);
+void floyd_steinberg(char[], char[]);
+
+void color_seperation(char[], char[]);
 
 #endif
