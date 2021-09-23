@@ -213,6 +213,7 @@ void floyd_steinberg(char input_path[], char output_path[])
 	}
 
 	saveRGB(output_path);
+
 }
 
 void color_seperation(char input_path[], char output_path[])
@@ -226,11 +227,11 @@ void color_seperation(char input_path[], char output_path[])
 			// Get a pointer to the pixel and select a palette color for it.
 			bitmap_pixel_rgb_t* pix = &rgb_pixels[(widthPx * y) + x];
 			bitmap_pixel_rgb_t pal = select_from_pal(*pix);
-			
+
 			// Assign the new pixel value.
 			*pix = pal;
 		}
 	}
 
 	saveRGB(output_path);
-}
+} 
