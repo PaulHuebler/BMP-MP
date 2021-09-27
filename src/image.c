@@ -1,13 +1,20 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 
-
+GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action);
 
 static void menu_response(GtkWidget* menu_item, gpointer data)
 {
-    if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "New") == 0)   
+    GtkWidget *fdialog;
+    char *fname = "";
+
+    if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Open") == 0)   
     {
-        g_print("You pressed New\n");
+        g_print("You pressed Open\n");
+        fdialog = create_filechooser_dialog(fname, GTK_FILE_CHOOSER_ACTION_OPEN);
+        if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_OK) {
+          fname = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fdialog));
+          printf(fname); }
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Exit") == 0)  
     {
@@ -20,20 +27,20 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 }
 
 GtkWidget *
-create_filechooser_dialog(char *init_path, GtkFileChooserAction action)           // https://stackoverflow.com/questions/30751178/gtk3-file-chooser-in-a-non-gtk-application
+create_filechooser_dialog(char *init_path, GtkFileChooserAction action)
 {
-  GtkWidget *wdg = NULL;
+  GtkWidget *fdialog = NULL;
 
   switch (action) {
     case GTK_FILE_CHOOSER_ACTION_SAVE:
-      wdg = gtk_file_chooser_dialog_new("Save file", NULL, action,
+      fdialog = gtk_file_chooser_dialog_new("Save file", NULL, action,
         "Cancel", GTK_RESPONSE_CANCEL,
         "Save", GTK_RESPONSE_OK,
         NULL);
       break;
 
     case GTK_FILE_CHOOSER_ACTION_OPEN:
-      wdg = gtk_file_chooser_dialog_new("Open file", NULL, action,
+      fdialog = gtk_file_chooser_dialog_new("Open file", NULL, action,
         "Cancel", GTK_RESPONSE_CANCEL,
         "Open", GTK_RESPONSE_OK,
         NULL);
@@ -44,33 +51,16 @@ create_filechooser_dialog(char *init_path, GtkFileChooserAction action)         
       break;
   }
 
-  return wdg;
+  return fdialog;
 }
-
-GdkPixbuf *create_pixbuf(const gchar * filename) {
-    
-   GdkPixbuf *pixbuf;
-   GError *error = NULL;
-   pixbuf = gdk_pixbuf_new_from_file(filename, &error);
-   
-   if (!pixbuf) {
-       
-      fprintf(stderr, "%s\n", error->message);
-      g_error_free(error);
-   }
-
-   return pixbuf;
-} 
 
 
 int main (int    argc, char **argv)
 {
   GtkWidget *window;
-  //GdkPixbuf *image;
   GtkWidget *layout;
   GtkWidget *image;
   GtkWidget *menu_bar, *menu_item, *file_menu, *help_menu, *vbox, *button;
-  GtkWidget *wdg;
   char *file_name = "";
 
   gtk_init(&argc, &argv);
@@ -102,7 +92,7 @@ int main (int    argc, char **argv)
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item), help_menu);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
  
-  menu_item = gtk_menu_item_new_with_label("New");
+  menu_item = gtk_menu_item_new_with_label("Open");
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
  
@@ -120,9 +110,6 @@ int main (int    argc, char **argv)
   //gtk_box_pack_start(GTK_BOX(vbox), button,0,0,0);
  
   gtk_layout_put(GTK_LAYOUT(layout), vbox, 0, 0);
-
-// open a file
-  wdg = create_filechooser_dialog(file_name, GTK_FILE_CHOOSER_ACTION_OPEN);
   
 // show image
   image = gtk_image_new_from_file (file_name);
