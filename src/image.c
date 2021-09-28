@@ -14,7 +14,7 @@ static void show_image(char *file_path);
 static void menu_response(GtkWidget* menu_item, gpointer data)
 {
     GtkWidget *fdialog;
-    char fname;
+    char *fname;
 
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Open") == 0)   
     {
@@ -28,6 +28,10 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
           file_name = fname;
           show_image(fname);
         }
+    }
+    if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "/*Brightness") == 0)  
+    {
+        // TODO
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Exit") == 0)  
     {
