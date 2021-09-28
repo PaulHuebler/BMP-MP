@@ -14,8 +14,7 @@ static void show_image(char *file_path);
 static void menu_response(GtkWidget* menu_item, gpointer data)
 {
     GtkWidget *fdialog;
-    //char *fname = "";
-    char *fname = file_name;
+    char fname;
 
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Open") == 0)   
     {
@@ -26,6 +25,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
           g_print("%s\n", fname);
           gtk_image_new_from_file(fname);
           gtk_widget_destroy(fdialog);
+          file_name = fname;
           show_image(fname);
         }
     }
@@ -130,6 +130,10 @@ int main (int    argc, char **argv)
   menu_item = gtk_menu_item_new_with_label("Tools");
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item), tools_menu);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
+
+  menu_item = gtk_menu_item_new_with_label("Brightness");
+  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   vbox = gtk_box_new(0,0);
   //button = gtk_button_new_with_label("This is a Button");
