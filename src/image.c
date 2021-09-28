@@ -1,9 +1,15 @@
 #include <gtk/gtk.h>
+#include <glib/gstdio.h>
 #include <stdio.h>
+//#include <errno.h>
 
-
+static GtkWidget *window;
+static GtkWidget *layout;
 
 GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action);
+static void show_image(char *file_path);
+
+
 
 static void menu_response(GtkWidget* menu_item, gpointer data)
 {
@@ -16,9 +22,10 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         fdialog = create_filechooser_dialog(fname, GTK_FILE_CHOOSER_ACTION_OPEN);
         if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_OK) {
           fname = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fdialog));
-          g_print("%s", fname);
+          g_print("%s\n", fname);
           gtk_image_new_from_file(fname);
           gtk_widget_destroy(fdialog);
+          show_image(fname);
         }
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Exit") == 0)  
@@ -31,8 +38,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     }
 }
 
-GtkWidget *
-create_filechooser_dialog(char *init_path, GtkFileChooserAction action)
+GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action)
 {
   GtkWidget *fdialog = NULL;
 
@@ -59,15 +65,22 @@ create_filechooser_dialog(char *init_path, GtkFileChooserAction action)
   return fdialog;
 }
 
-//static void show_image(char *file_path);
+static void show_image(char *file_path)
+{
+  GtkWidget *image;
+
+  // show image
+  image = gtk_image_new_from_file (file_path);
+  gtk_layout_put(GTK_LAYOUT(layout), image, 20, 80);
+
+  gtk_widget_show(layout);
+  gtk_widget_show_all(window);
+
+}
 
 int main (int    argc, char **argv)
 {
-  GtkWidget *window;
-  GtkWidget *layout;
-  GtkWidget *image;
   GtkWidget *menu_bar, *menu_item, *file_menu, *help_menu, *vbox, *button;
-  char *file_name = "";
 
   gtk_init(&argc, &argv);
 
@@ -76,13 +89,14 @@ int main (int    argc, char **argv)
   gtk_window_set_title(GTK_WINDOW(window), "BMP-MP");
   gtk_window_set_default_size(GTK_WINDOW(window), 800, 800);
   gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-
+  
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
   
 // layoutcontainer for image
   layout = gtk_layout_new(NULL, NULL);                                         
   gtk_container_add(GTK_CONTAINER (window), layout);
   gtk_widget_show(layout);
+
 
 // Menubar: 
   menu_bar = gtk_menu_bar_new();
@@ -114,12 +128,8 @@ int main (int    argc, char **argv)
   //button = gtk_button_new_with_label("This is a Button");
   gtk_box_pack_start(GTK_BOX(vbox), menu_bar,1,0,0);
   //gtk_box_pack_start(GTK_BOX(vbox), button,0,0,0);
- 
   gtk_layout_put(GTK_LAYOUT(layout), vbox, 0, 0);
   
-// show image
-  image = gtk_image_new_from_file (file_name);
-  gtk_layout_put(GTK_LAYOUT(layout), image, 20, 80);
 
   gtk_widget_show_all(window);
 
