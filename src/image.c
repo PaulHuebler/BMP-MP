@@ -5,16 +5,17 @@
 
 static GtkWidget *window;
 static GtkWidget *layout;
+static GtkWidget *file_name;
 
 GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action);
 static void show_image(char *file_path);
 
 
-
 static void menu_response(GtkWidget* menu_item, gpointer data)
 {
     GtkWidget *fdialog;
-    char *fname = "";
+    //char *fname = "";
+    char *fname = file_name;
 
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Open") == 0)   
     {
@@ -80,7 +81,8 @@ static void show_image(char *file_path)
 
 int main (int    argc, char **argv)
 {
-  GtkWidget *menu_bar, *menu_item, *file_menu, *help_menu, *vbox, *button;
+  GtkWidget *menu_bar, *menu_item, *file_menu, *help_menu, *vbox, *button,
+            *tools_menu;
 
   gtk_init(&argc, &argv);
 
@@ -102,6 +104,7 @@ int main (int    argc, char **argv)
   menu_bar = gtk_menu_bar_new();
 
   file_menu = gtk_menu_new();
+  tools_menu = gtk_menu_new();
   help_menu = gtk_menu_new();
   
   menu_item = gtk_menu_item_new_with_label("File");
@@ -123,6 +126,10 @@ int main (int    argc, char **argv)
   menu_item = gtk_menu_item_new_with_label("About");
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
+
+  menu_item = gtk_menu_item_new_with_label("Tools");
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item), tools_menu);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
 
   vbox = gtk_box_new(0,0);
   //button = gtk_button_new_with_label("This is a Button");
