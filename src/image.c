@@ -1,6 +1,8 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 
+
+
 GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action);
 
 static void menu_response(GtkWidget* menu_item, gpointer data)
@@ -14,7 +16,10 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         fdialog = create_filechooser_dialog(fname, GTK_FILE_CHOOSER_ACTION_OPEN);
         if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_OK) {
           fname = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fdialog));
-          printf(fname); }
+          g_print("%s", fname);
+          gtk_image_new_from_file(fname);
+          gtk_widget_destroy(fdialog);
+        }
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Exit") == 0)  
     {
@@ -46,14 +51,15 @@ create_filechooser_dialog(char *init_path, GtkFileChooserAction action)
         NULL);
       break;
 
-    case GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER:
-    case GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER:
+    //case GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER:
+    //case GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER:
       break;
   }
 
   return fdialog;
 }
 
+//static void show_image(char *file_path);
 
 int main (int    argc, char **argv)
 {
