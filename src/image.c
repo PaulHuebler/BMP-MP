@@ -1,14 +1,15 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
-#include <stdio.h>
-//#include <errno.h>
+
+
 
 static GtkWidget *window;
 static GtkWidget *layout;
-static GtkWidget *file_name;
+GtkWidget *file_name;
 
 GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action);
 static void show_image(char *file_path);
+static void set_brightness (char* file_path);
 
 
 static void menu_response(GtkWidget* menu_item, gpointer data)
@@ -31,7 +32,8 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "/*Brightness") == 0)  
     {
-        // TODO
+        g_print("You pressed Brightness\n");
+        set_brightness(file_name);
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Exit") == 0)  
     {
@@ -41,6 +43,11 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     {
         g_print("You pressed About\n");
     }
+}
+
+static void set_brightness (char* file_path)
+{
+  g_print("%s and something\n", file_path);
 }
 
 GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action)
@@ -138,6 +145,7 @@ int main (int    argc, char **argv)
   menu_item = gtk_menu_item_new_with_label("Brightness");
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
+
 
   vbox = gtk_box_new(0,0);
   //button = gtk_button_new_with_label("This is a Button");
