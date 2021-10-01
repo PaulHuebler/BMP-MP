@@ -8,7 +8,7 @@
 
 static GtkWidget *window;
 static GtkWidget *layout;
-GtkWidget *file_name;
+char *file_name;
 
 GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action);
 static void show_image(char *file_path);
@@ -33,7 +33,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
           show_image(fname);
         }
     }
-    if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "/*Brightness") == 0)  
+    if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Brightness") == 0)  
     {
         g_print("You pressed Brightness\n");
         set_brightness(file_name);
@@ -50,7 +50,22 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
 static void set_brightness (char* file_path)
 {
-  g_print("%s and something\n", file_path);
+  char *output_path = "/home/benni/Documents/BMP-MP/img/test1.bmp";
+  GtkWidget *frame, *table;
+
+  /*
+  table = gtk_table_new(2, 2, TRUE);
+  gtk_table_set_row_spacings(GTK_TABLE(table), 10);
+  gtk_table_set_col_spacings(GTK_TABLE(table), 10);
+  gtk_container_add(GTK_CONTAINER(window), table);
+
+  frame = gtk_frame_new("Brightness");
+  gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_IN);
+  gtk_table_attach_defaults(GTK_TABLE(table), frame1, 0, 1, 0, 1);
+  */
+ 
+  brightness(file_path, output_path, 100);
+  show_image(output_path);
 }
 
 GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action)
