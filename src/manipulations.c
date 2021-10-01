@@ -24,6 +24,12 @@ bitmap_pixel_rgb_t PAL[] =
 	{ .r = 0xFF, .g = 0xFF, .b = 0xFF }  // White
 };
 
+void copy_bmp(char input_path[], char output_path[]) {
+
+	loadHSV(input_path);
+	saveHSV(output_path);
+}
+
 static void loadHSV(char path[]) {
 
 	error = bitmapReadPixels(path, (bitmap_pixel_t**)&hsv_pixels, &widthPx, &heightPx, BITMAP_COLOR_SPACE_HSV);

@@ -14,6 +14,8 @@ static void loadRGB(char path[]);
 
 static void saveRGB(char path[]);
 
+void copy_bmp(char input_path[], char output_path[]);
+
 void brightness(char input_path[], char output_path[], int value);
 
 void saturation(char input_path[], char output_path[], int value);

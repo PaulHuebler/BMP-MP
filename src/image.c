@@ -31,6 +31,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
           gtk_widget_destroy(fdialog);
           file_name = fname;
           show_image(fname);
+
+          copy_bmp(fname, "../img/old.bmp");
+          copy_bmp("../img/old.bmp", "../img/new.bmp");
         }
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "/*Brightness") == 0)  
