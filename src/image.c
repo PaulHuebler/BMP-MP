@@ -1,6 +1,9 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 
+#include "../include/bitmap.h"
+#include "../include/manipulations.h"
+
 
 
 static GtkWidget *window;
