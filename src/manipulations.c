@@ -235,3 +235,49 @@ void color_seperation(char input_path[], char output_path[])
 
 	saveRGB(output_path);
 } 
+
+void color_enhancement(char input_path[], char output_path[], int color, float value)
+{
+	loadRGB(input_path);
+	bitmap_pixel_rgb_t pal_pix = PAL[color];
+	uint32_t count = heightPx * widthPx;
+
+		for (uint32_t x = 0; x < count; x++)
+		{
+
+			bitmap_pixel_rgb_t* pix = &rgb_pixels[x];
+
+			if ((pix->r + value* pal_pix.r/255 * pix->r) > 255) {
+				pix->r = 255;
+			}
+			else if ((pix->r + value * pal_pix.r/255 * pix->r) < 0) {
+				pix->r = 0;
+			}
+			else {
+				pix->r = pix->r + (int)(value * pal_pix.r/255 * pix->r);
+			}
+
+			if ((pix->g + value * pal_pix.g/255 * pix->g) > 255) {
+				pix->g = 255;
+			}
+			else if ((pix->g + value * pal_pix.g/255 * pix->g) < 0) {
+				pix->g = 0;
+			}
+			else {
+				pix->g = pix->g + (int)(value * pal_pix.g/255 * pix->g);
+			}
+
+			if ((pix->b + value * pal_pix.b/255 * pix->b) > 255) {
+				pix->b = 255;
+			}
+			else if ((pix->b + value * pal_pix.b/255 * pix->b) < 0) {
+				pix->b = 0;
+			}
+			else {
+				pix->b = pix->b + (int)(value * pal_pix.b/255 * pix->b);
+			}
+			
+		}	
+
+	saveRGB(output_path);
+}

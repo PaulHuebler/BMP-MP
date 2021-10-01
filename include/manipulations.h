@@ -6,22 +6,24 @@ bitmap_pixel_rgb_t* rgb_pixels;
 uint32_t widthPx, heightPx;
 bitmap_error_t error;
 
-static void loadHSV(char[]);
+static void loadHSV(char path[]);
 
-static void saveHSV(char[]);
+static void saveHSV(char path[]);
 
-static void loadRGB(char[]);
+static void loadRGB(char path[]);
 
-static void saveRGB(char[]);
+static void saveRGB(char path[]);
 
-void brightness(char[], char[], int);
+void brightness(char input_path[], char output_path[], int value);
 
-void saturation(char[], char[], int);
+void saturation(char input_path[], char output_path[], int value);
 
-void grayscale(char[], char[]);
+void grayscale(char input_path[], char output_path[]);
 
-void floyd_steinberg(char[], char[]);
+void floyd_steinberg(char input_path[], char output_path[]);
 
-void color_seperation(char[], char[]);
+void color_seperation(char input_path[], char output_path[]);
+
+void color_enhancement(char input_path[], char output_path[], int color, float value);
 
 #endif
