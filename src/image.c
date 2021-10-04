@@ -23,7 +23,7 @@ void set_saturation (GtkWidget* widget, gpointer data);
 
 static void menu_response(GtkWidget* menu_item, gpointer data)
 {
-    GtkWidget *fdialog;
+    GtkWidget *fdialog = NULL;
     char *fname;
 
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Open") == 0)   
@@ -39,6 +39,11 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
           show_image(fname);
           copy_bmp(file_name, "../img/old.bmp");        // backup of the original
         }
+/* TODO Bugfix: Cancel -> Window schleißen
+        if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_CANCEL) {
+          gtk_widget_destroy(GTK_WIDGET(fdialog));
+        }
+        */        
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Brightness") == 0)  
     {
@@ -186,10 +191,11 @@ void set_saturation (GtkWidget* widget, gpointer data)
   char *output_path = "../img/new.bmp";
   
   if (GPOINTER_TO_INT(data) == 0){
+
     copy_bmp("../img/old.bmp","../img/new.bmp");
     show_image("../img/old.bmp");
-  }
-  if (GPOINTER_TO_INT(data) != 0){
+  } else {
+    
     saturation("../img/new.bmp", output_path, GPOINTER_TO_INT(data));
     show_image(output_path);
   }
@@ -201,7 +207,7 @@ void set_saturation (GtkWidget* widget, gpointer data)
 
 int main (int    argc, char **argv)
 {
-  GtkWidget *menu_bar, *menu_item, *file_menu, *help_menu, *vbox, *button,
+  GtkWidget *menu_bar, *menu_item, *file_menu, *help_menu, *vbox, *save_button,
             *tools_menu;
 
   gtk_init(&argc, &argv);
@@ -266,9 +272,9 @@ int main (int    argc, char **argv)
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   vbox = gtk_box_new(0,0);
-  //button = gtk_button_new_with_label("SAVEBUTTON");
   gtk_box_pack_start(GTK_BOX(vbox), menu_bar,1,0,0);
-  //gtk_box_pack_start(GTK_BOX(vbox), button,0,0,0);
+  save_button = gtk_button_new_with_label("SAVE");
+  gtk_box_pack_start(GTK_BOX(vbox), save_button,0,0,0);
   gtk_layout_put(GTK_LAYOUT(layout), vbox, 0, 0);
   
 
