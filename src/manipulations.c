@@ -131,8 +131,8 @@ void saturation(char input_path[], char output_path[], int value)
 	saveHSV(output_path);
 }
 
-void grayscale(char input_path[], char output_path[])
-{
+void grayscale(char input_path[], char output_path[]) {
+
 	loadHSV(input_path);
 	uint32_t count = heightPx * widthPx;
 
@@ -145,6 +145,46 @@ void grayscale(char input_path[], char output_path[])
 		}	
 
 	saveHSV(output_path);
+}
+
+void exclusive_grayscale(char input_path[], char output_path[], int color, int tolerance) {
+
+	loadHSV(input_path);
+
+	uint32_t count = heightPx * widthPx;
+
+		for (uint32_t x = 0; x < count; x++)
+		{
+
+			bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
+
+			if (abs(pix->h - color) >= tolerance) {
+				pix->s = 0;
+			}
+		}	
+
+	saveHSV(output_path);
+
+}
+
+void colorswap(char input_path[], char output_path[], int old_color, int new_color, int tolerance) {
+
+	loadHSV(input_path);
+
+	uint32_t count = heightPx * widthPx;
+
+		for (uint32_t x = 0; x < count; x++)
+		{
+
+			bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
+
+			if (abs(pix->h - old_color) <= tolerance) {
+				pix->h = new_color;
+			}
+		}	
+
+	saveHSV(output_path);
+	
 }
 
 // Select the color from the palette that exhibits the minimum Euclidean distance to the given pixel.

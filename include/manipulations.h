@@ -30,4 +30,6 @@ void color_seperation(char input_path[], char output_path[]);
 
 void color_enhancement(char input_path[], char output_path[], int color, float value);
 
+void colorswap(char input_path[], char output_path[], int old_color, int new_color, int tolerance);
+
 #endif
