@@ -1,18 +1,19 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
+#include <stdint.h>
 
 #include "../include/bitmap.h"
 #include "../include/manipulations.h"
-
 
 
 static GtkWidget *window;
 static GtkWidget *layout;
 char *file_name;
 
+
 GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action);
 static void show_image(char *file_path);
-static void set_brightness (char* file_path);
+static void set_brightness (GtkWidget* widget, gpointer data);
 
 
 static void menu_response(GtkWidget* menu_item, gpointer data)
@@ -31,15 +32,35 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
           gtk_widget_destroy(fdialog);
           file_name = fname;
           show_image(fname);
-
-          copy_bmp(fname, "../img/old.bmp");
-          copy_bmp("../img/old.bmp", "../img/new.bmp");
         }
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Brightness") == 0)  
     {
         g_print("You pressed Brightness\n");
-        set_brightness(file_name);
+        copy_bmp(file_name, "../img/old.bmp");        // backup of the original
+        //eventuell "../img/brightness.bmp"    --> UNDO jeder Änderung (Bright, Sat., b/w)
+        
+
+        GtkWidget *plus_btn, *minus_btn, *undo_btn;
+        int p = 10;
+        int m = -10;
+
+        plus_btn = gtk_button_new_with_label("+10");
+        minus_btn = gtk_button_new_with_label("-10");
+        undo_btn = gtk_button_new_with_label("UNDO");
+        gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, 680);
+        gtk_layout_put(GTK_LAYOUT(layout), minus_btn, 100, 680);
+        gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, 680);
+        g_signal_connect (G_OBJECT(plus_btn), "clicked", 
+                          G_CALLBACK(set_brightness), GINT_TO_POINTER(p));
+        g_signal_connect (G_OBJECT(minus_btn), "clicked", 
+                          G_CALLBACK(set_brightness), GINT_TO_POINTER(m));
+        g_signal_connect (G_OBJECT(undo_btn), "clicked", 
+                          G_CALLBACK(set_brightness), GINT_TO_POINTER(0));
+                          
+
+        gtk_widget_show(layout);
+        gtk_widget_show_all(window);
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Exit") == 0)  
     {
@@ -51,24 +72,18 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     }
 }
 
-static void set_brightness (char* file_path)
+void set_brightness (GtkWidget* widget, gpointer data)
 {
-  char *output_path = "/home/benni/Documents/BMP-MP/img/test1.bmp";
-  GtkWidget *frame, *table;
-
-  /*
-  table = gtk_table_new(2, 2, TRUE);
-  gtk_table_set_row_spacings(GTK_TABLE(table), 10);
-  gtk_table_set_col_spacings(GTK_TABLE(table), 10);
-  gtk_container_add(GTK_CONTAINER(window), table);
-
-  frame = gtk_frame_new("Brightness");
-  gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_IN);
-  gtk_table_attach_defaults(GTK_TABLE(table), frame1, 0, 1, 0, 1);
-  */
- 
-  brightness(file_path, output_path, 100);
-  show_image(output_path);
+  char *output_path = "../img/new.bmp";
+  
+  if (GPOINTER_TO_INT(data) == 0){
+    copy_bmp("../img/old.bmp","../img/new.bmp");
+    show_image("../img/old.bmp");
+  }
+  if (GPOINTER_TO_INT(data) != 0){
+    brightness("../img/new.bmp", output_path, GPOINTER_TO_INT(data));
+    show_image(output_path);
+  }
 }
 
 GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action)
@@ -101,7 +116,7 @@ GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction acti
 static void show_image(char *file_path)
 {
   GtkWidget *image;
-
+  
   // show image
   image = gtk_image_new_from_file (file_path);
   gtk_layout_put(GTK_LAYOUT(layout), image, 20, 80);
