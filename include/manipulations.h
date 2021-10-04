@@ -22,6 +22,8 @@ void saturation(char input_path[], char output_path[], int value);
 
 void grayscale(char input_path[], char output_path[]);
 
+void exclusive_grayscale(char input_path[], char output_path[], int color, int tolerance);
+
 void floyd_steinberg(char input_path[], char output_path[]);
 
 void color_seperation(char input_path[], char output_path[]);
