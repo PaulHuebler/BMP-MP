@@ -131,8 +131,8 @@ void saturation(char input_path[], char output_path[], int value)
 	saveHSV(output_path);
 }
 
-void contrast(char input_path[], char output_path[], float value) {
-
+void contrast(char input_path[], char output_path[], int valuea) {
+	float value = (valuea/100);
 	loadRGB(input_path);
 
 	uint32_t count = heightPx * widthPx;

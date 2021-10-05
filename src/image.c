@@ -16,6 +16,8 @@ GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction acti
 static void show_image(char *file_path);
 static void set_brightness (GtkWidget* widget, gpointer data);
 void set_saturation (GtkWidget* widget, gpointer data);
+void set_contrast (GtkWidget* widget, gpointer data);
+
 
 
 /**********************************************************************************************************************************************************************
@@ -113,6 +115,40 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
                           G_CALLBACK(set_saturation), GINT_TO_POINTER(0));
                           
         frame_b = gtk_frame_new("Saturation");
+        gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+
+        gtk_widget_show(layout);
+        gtk_widget_show_all(window);
+    }
+    if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Contrast") == 0)  
+    {   
+        if (manipulated == false){
+          copy_bmp(file_name, "../img/old.bmp");        // backup of the original
+          copy_bmp(file_name, "../img/new.bmp");
+          manipulated = true;
+        } else {
+          copy_bmp("../img/new.bmp","../img/old.bmp");
+        }     
+        g_print("You pressed Contrast\n");
+        
+        GtkWidget *plus_btn, *minus_btn, *undo_btn;
+        GtkWidget *frame_b;
+
+        plus_btn = gtk_button_new_with_label("+10");
+        minus_btn = gtk_button_new_with_label("-10");
+        undo_btn = gtk_button_new_with_label("UNDO");
+        gtk_layout_put(GTK_LAYOUT(layout), minus_btn, 100, 680);
+        gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, 680);
+        gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, 680);
+        g_signal_connect (G_OBJECT(minus_btn), "clicked", 
+                          G_CALLBACK(set_contrast), GINT_TO_POINTER(-10));
+        g_signal_connect (G_OBJECT(plus_btn), "clicked", 
+                          G_CALLBACK(set_contrast), GINT_TO_POINTER(10));
+        g_signal_connect (G_OBJECT(undo_btn), "clicked", 
+                          G_CALLBACK(set_contrast), GINT_TO_POINTER(0));
+                          
+        frame_b = gtk_frame_new("Contrast");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
         gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
 
@@ -220,6 +256,21 @@ void set_saturation (GtkWidget* widget, gpointer data)
   }
 }
 
+void set_contrast (GtkWidget* widget, gpointer data)
+{
+  char *output_path = "../img/new.bmp";
+  
+  if (GPOINTER_TO_INT(data) == 0){                         // UNDO-action
+
+    copy_bmp("../img/old.bmp","../img/new.bmp");
+    show_image("../img/old.bmp");
+  } else {
+    
+    saturation("../img/new.bmp", output_path, GPOINTER_TO_INT(data));
+    show_image(output_path);
+  }
+}
+
 /**********************************************************************************************************************************************************************
 	main()
 **********************************************************************************************************************************************************************/
@@ -281,6 +332,10 @@ int main (int    argc, char **argv)
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   menu_item = gtk_menu_item_new_with_label("Saturation");
+  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
+
+  menu_item = gtk_menu_item_new_with_label("Contrast");
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
