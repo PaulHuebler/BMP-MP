@@ -30,6 +30,12 @@ static void loadHSV(char path[]) {
 	assert(error == BITMAP_ERROR_SUCCESS);
 }
 
+void copy_bmp(char input_path[], char output_path[]) {
+
+	loadHSV(input_path);
+	saveHSV(output_path);
+}
+
 static void saveHSV(char path[]) {
 
 	bitmap_parameters_t params;
