@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "../include/bitmap.h"
 #include "../include/manipulations.h"
@@ -9,7 +10,7 @@
 static GtkWidget *window;
 static GtkWidget *layout;
 char *file_name;
-
+bool manipulated = false;
 
 GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action);
 static void show_image(char *file_path);
@@ -39,18 +40,23 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
           show_image(fname);
           copy_bmp(file_name, "../img/old.bmp");        // backup of the original
         }
-/* TODO Bugfix: Cancel -> Window schleißen
+/* TODO Bugfix: Cancel -> Window schleißen 
         if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_CANCEL) {
           gtk_widget_destroy(GTK_WIDGET(fdialog));
         }
-        */        
+        */
+           
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Brightness") == 0)  
     {
+        if (manipulated == false){
+          copy_bmp(file_name, "../img/old.bmp");        // backup of the original
+          copy_bmp(file_name, "../img/new.bmp");
+          manipulated = true;
+        } else {
+          copy_bmp("../img/new.bmp","../img/old.bmp");
+        }  
         g_print("You pressed Brightness\n");
-        copy_bmp(file_name, "../img/old.bmp");        // backup of the original
-        //eventuell "../img/brightness.bmp"    --> UNDO jeder Änderung (Bright, Sat., b/w)
-        
 
         GtkWidget *plus_btn, *minus_btn, *undo_btn;
         GtkWidget *frame_b;
@@ -78,7 +84,14 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_show_all(window);
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Saturation") == 0)  
-    {
+    {   
+        if (manipulated == false){
+          copy_bmp(file_name, "../img/old.bmp");        // backup of the original
+          copy_bmp(file_name, "../img/new.bmp");
+          manipulated = true;
+        } else {
+          copy_bmp("../img/new.bmp","../img/old.bmp");
+        }     
         g_print("You pressed Saturation\n");
         
         GtkWidget *plus_btn, *minus_btn, *undo_btn;
@@ -108,15 +121,21 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Grayscale") == 0)  
     {
-      //copy_bmp("../img/new.bmp","../img/old.bmp");
-      if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item))){
-        
-        grayscale("../img/new.bmp","../img/new.bmp");
-        show_image("../img/new.bmp");
-      } else {
-        
-        show_image("../img/old.bmp");
-      }
+        if (manipulated == false){
+          copy_bmp(file_name, "../img/old.bmp");        // backup of the original
+          copy_bmp(file_name, "../img/new.bmp");
+          manipulated = true;
+        } else {
+          copy_bmp("../img/new.bmp","../img/old.bmp");
+        }  
+        if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item))){
+
+          grayscale("../img/old.bmp","../img/new.bmp");
+          show_image("../img/new.bmp");
+        } else {
+
+          show_image("../img/old.bmp");
+        }
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Exit") == 0)  
     {
@@ -176,8 +195,8 @@ void set_brightness (GtkWidget* widget, gpointer data)
 {
   char *output_path = "../img/new.bmp";
   
-  if (GPOINTER_TO_INT(data) == 0){
-    copy_bmp("../img/old.bmp","../img/new.bmp");
+  if (GPOINTER_TO_INT(data) == 0){                          // UNDO-action
+    copy_bmp("../img/old.bmp","../img/new.bmp");  
     show_image("../img/old.bmp");
   }
   if (GPOINTER_TO_INT(data) != 0){
@@ -190,7 +209,7 @@ void set_saturation (GtkWidget* widget, gpointer data)
 {
   char *output_path = "../img/new.bmp";
   
-  if (GPOINTER_TO_INT(data) == 0){
+  if (GPOINTER_TO_INT(data) == 0){                         // UNDO-action
 
     copy_bmp("../img/old.bmp","../img/new.bmp");
     show_image("../img/old.bmp");
