@@ -54,4 +54,7 @@ void colorswap(char input_path[], char output_path[], int old_color, int new_col
 // Invertieren der Farben (RGB)
 void invert_colors(char input_path[], char output_path[]);
 
+// Färbt ein Bild in Sepia-Farben (RGB)
+void sepia(char input_path[], char output_path[]);
+
 #endif

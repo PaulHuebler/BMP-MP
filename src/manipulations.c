@@ -298,3 +298,46 @@ void invert_colors(char input_path[], char output_path[]) {
 
 	saveRGB(output_path);
 }
+
+void sepia(char input_path[], char output_path[]) {
+
+	loadRGB(input_path);
+
+	uint32_t count = heightPx * widthPx;
+
+	for (uint32_t x = 0; x < count; x++)
+		{
+
+			bitmap_pixel_rgb_t* pix = &rgb_pixels[x];
+
+			// Calculations: https://www.techrepublic.com/blog/how-do-i/how-do-i-convert-images-to-grayscale-and-sepia-tone-using-c/
+			int output_r = (pix->r * 0.393 + pix->g * 0.769 + pix->b * 0.189);
+			int output_g = (pix->r * 0.349 + pix->g * 0.686 + pix->b * 0.168);
+			int output_b = (pix->r * 0.272 + pix->g * 0.534 + pix->b * 0.131);
+
+			if (output_r > 255) {
+				pix->r = 255;
+			} 
+			else {
+				pix->r = output_r;
+			}
+
+			if (output_g > 255) {
+				pix->g = 255;
+			} 
+			else {
+				pix->g = output_g;
+			}
+
+			if (output_b > 255) {
+				pix->b = 255;
+			} 
+			else {
+				pix->b = output_b;
+			}
+			
+		}
+
+	saveRGB(output_path);
+
+}
