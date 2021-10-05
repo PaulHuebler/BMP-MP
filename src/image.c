@@ -18,7 +18,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Open") == 0)   
     {
-        g_print("You pressed Open\n");
         fdialog = create_filechooser_dialog(fname, GTK_FILE_CHOOSER_ACTION_OPEN);
         if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_OK) {
           fname = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fdialog));
@@ -45,7 +44,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         } else {
           copy_bmp("../img/new.bmp","../img/old.bmp");
         }  
-        g_print("You pressed Brightness\n");
 
         GtkWidget *plus_btn, *minus_btn, *undo_btn;
         GtkWidget *frame_b;
@@ -81,7 +79,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         } else {
           copy_bmp("../img/new.bmp","../img/old.bmp");
         }     
-        g_print("You pressed Saturation\n");
         
         GtkWidget *plus_btn, *minus_btn, *undo_btn;
         GtkWidget *frame_b;
@@ -117,7 +114,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         } else {
           copy_bmp("../img/new.bmp","../img/old.bmp");
         }     
-        g_print("You pressed Contrast\n");
         
         GtkWidget *plus_btn, *minus_btn, *undo_btn;
         GtkWidget *frame_b;
@@ -129,9 +125,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, 680);
         gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, 680);
         g_signal_connect (G_OBJECT(minus_btn), "clicked", 
-                          G_CALLBACK(set_contrast), GINT_TO_POINTER(-10));
+                          G_CALLBACK(set_contrast), GINT_TO_POINTER(-5));
         g_signal_connect (G_OBJECT(plus_btn), "clicked", 
-                          G_CALLBACK(set_contrast), GINT_TO_POINTER(10));
+                          G_CALLBACK(set_contrast), GINT_TO_POINTER(5));
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(set_contrast), GINT_TO_POINTER(0));
                           
@@ -159,6 +155,40 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
           show_image("../img/old.bmp");
         }
+    }
+    if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "exclusive Grayscale") == 0)  
+    {   
+        if (manipulated == false){
+          copy_bmp(file_name, "../img/old.bmp");        // backup of the original
+          copy_bmp(file_name, "../img/new.bmp");
+          manipulated = true;
+        } else {
+          copy_bmp("../img/new.bmp","../img/old.bmp");
+        }     
+        g_print("You pressed exclusive Grayscale\n");
+        
+        GtkWidget *plus_btn, *minus_btn, *undo_btn;
+        GtkWidget *frame_b;
+
+        plus_btn = gtk_button_new_with_label("+10");
+        minus_btn = gtk_button_new_with_label("-10");
+        undo_btn = gtk_button_new_with_label("UNDO");
+        gtk_layout_put(GTK_LAYOUT(layout), minus_btn, 100, 680);
+        gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, 680);
+        gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, 680);
+        g_signal_connect (G_OBJECT(minus_btn), "clicked", 
+                          G_CALLBACK(set_exclusive_grayscale), GINT_TO_POINTER(-10));
+        g_signal_connect (G_OBJECT(plus_btn), "clicked", 
+                          G_CALLBACK(set_exclusive_grayscale), GINT_TO_POINTER(10));
+        g_signal_connect (G_OBJECT(undo_btn), "clicked", 
+                          G_CALLBACK(set_exclusive_grayscale), GINT_TO_POINTER(0));
+                          
+        frame_b = gtk_frame_new("exclusive Grayscale");
+        gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+
+        gtk_widget_show(layout);
+        gtk_widget_show_all(window);
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Exit") == 0)  
     {
@@ -217,7 +247,7 @@ static void show_image(char *file_path)
 void set_brightness (GtkWidget* widget, gpointer data)
 {
   char *output_path = "../img/new.bmp";
-  
+
   if (GPOINTER_TO_INT(data) == 0){                          // UNDO-action
     copy_bmp("../img/old.bmp","../img/new.bmp");  
     show_image("../img/old.bmp");
@@ -246,14 +276,34 @@ void set_saturation (GtkWidget* widget, gpointer data)
 void set_contrast (GtkWidget* widget, gpointer data)
 {
   char *output_path = "../img/new.bmp";
-  
-  if (GPOINTER_TO_INT(data) == 0){                         // UNDO-action
+  int i = GPOINTER_TO_INT(data);
+  current_float_value = ((current_float_value) + (i/100.0f));
 
+  if (GPOINTER_TO_INT(data) == 0){
+    current_float_value = 1.0;
     copy_bmp("../img/old.bmp","../img/new.bmp");
     show_image("../img/old.bmp");
   } else {
     
-    saturation("../img/new.bmp", output_path, GPOINTER_TO_INT(data));
+    contrast("../img/new.bmp", output_path, current_float_value);
+    show_image(output_path);
+  }
+}
+
+void set_exclusive_grayscale (GtkWidget* widget, gpointer data)
+{
+  char *output_path = "../img/new.bmp";
+  int i = GPOINTER_TO_INT(data);
+  current_int_value = (current_int_value + i);
+  g_print("\n\n\n%d\n\n\n", current_int_value);
+  if (GPOINTER_TO_INT(data) == 0){                         // UNDO-action
+
+    current_int_value = 0;
+    copy_bmp("../img/old.bmp","../img/new.bmp");
+    show_image("../img/old.bmp");
+  } else {
+    
+    exclusive_grayscale("../img/new.bmp", output_path, 0);
     show_image(output_path);
   }
 }
@@ -323,6 +373,10 @@ int main (int    argc, char **argv)
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   menu_item = gtk_menu_item_new_with_label("Contrast");
+  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
+
+  menu_item = gtk_menu_item_new_with_label("exclusive Grayscale");
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 

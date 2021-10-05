@@ -31,7 +31,7 @@ void brightness(char input_path[], char output_path[], int value);
 void saturation(char input_path[], char output_path[], int value);
 
 // Verändert den Kontrast des Bildes (RGB)
-void contrast(char input_path[], char output_path[], int valuea);
+void contrast(char input_path[], char output_path[], float value);
 
 // Stellt das Bild in Graustufen dar (HSV) 
 void grayscale(char input_path[], char output_path[]);
