@@ -395,3 +395,47 @@ void sepia(char input_path[], char output_path[]) {
 	saveRGB(output_path);
 
 }
+
+void mirror_vert(char input_path[], char output_path[]) {
+
+	loadRGB(input_path);
+
+		// läuft die "Zeilen" ab
+		for (uint32_t x = 0; x < heightPx; x++) {
+			
+			// läuft die "Spalten" ab
+			for (uint32_t y = 0; y < widthPx/2; y++) {
+
+				bitmap_pixel_rgb_t* pix1 = &rgb_pixels[x*widthPx + y];
+				bitmap_pixel_rgb_t* pix2 = &rgb_pixels[x*widthPx + widthPx - y];
+				bitmap_pixel_rgb_t* temp = &rgb_pixels[0];
+				*temp = *pix1;
+				*pix1 = *pix2;
+				*pix2 = *temp;
+			}
+		}	
+
+	saveRGB(output_path);
+}
+
+void mirror_hor(char input_path[], char output_path[]) {
+
+	loadRGB(input_path);
+
+		// läuft die "Spalten" ab
+		for (uint32_t x = 0; x < widthPx; x++) {
+			
+			// läuft die "Zeilen" ab
+			for (uint32_t y = 0; y < heightPx/2; y++) {
+
+				bitmap_pixel_rgb_t* pix1 = &rgb_pixels[y*widthPx + x];
+				bitmap_pixel_rgb_t* pix2 = &rgb_pixels[(heightPx - y)*widthPx + x];
+				bitmap_pixel_rgb_t* temp = &rgb_pixels[0];
+				*temp = *pix1;
+				*pix1 = *pix2;
+				*pix2 = *temp;
+			}
+		}	
+
+	saveRGB(output_path);
+}

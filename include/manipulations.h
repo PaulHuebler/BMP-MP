@@ -57,4 +57,10 @@ void invert_colors(char input_path[], char output_path[]);
 // Färbt ein Bild in Sepia-Farben (RGB)
 void sepia(char input_path[], char output_path[]);
 
+// Spiegelt das Bild vertikal (RGB)
+void mirror_vert(char input_path[], char output_path[]);
+
+// Spiegelt das Bild horizontal (RGB)
+void mirror_hor(char input_path[], char output_path[]);
+
 #endif
