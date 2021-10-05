@@ -30,6 +30,9 @@ void brightness(char input_path[], char output_path[], int value);
 // Verändert die Sättigung des Bildes (HSV) 
 void saturation(char input_path[], char output_path[], int value);
 
+// Verändert den Kontrast des Bildes (RGB)
+void contrast(char input_path[], char output_path[], float value);
+
 // Stellt das Bild in Graustufen dar (HSV) 
 void grayscale(char input_path[], char output_path[]);
 
@@ -48,7 +51,7 @@ void color_enhancement(char input_path[], char output_path[], int color, float v
 // Eine Farbe wird durch eine andere ersetzt (HSV)
 void colorswap(char input_path[], char output_path[], int old_color, int new_color, int tolerance);
 
-// Invertieren der Farben
-void invert_colors();
+// Invertieren der Farben (RGB)
+void invert_colors(char input_path[], char output_path[]);
 
 #endif

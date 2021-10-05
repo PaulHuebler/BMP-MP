@@ -125,8 +125,53 @@ void saturation(char input_path[], char output_path[], int value)
 	saveHSV(output_path);
 }
 
-void grayscale(char input_path[], char output_path[])
-{
+void contrast(char input_path[], char output_path[], float value) {
+
+	loadRGB(input_path);
+
+	uint32_t count = heightPx * widthPx;
+
+		for (uint32_t x = 0; x < count; x++)
+		{
+
+			bitmap_pixel_rgb_t* pix = &rgb_pixels[x];
+
+			if ((pix->r * value) > 255) {
+				pix->r = 255;
+			} 
+			else if ((pix->r * value) < 0) {
+				pix->r = 0;
+			}
+			else {
+				pix->r = (pix->r * value);
+			}
+
+			if ((pix->g * value) > 255) {
+				pix->g = 255;
+			} 
+			else if ((pix->g * value) < 0) {
+				pix->g = 0;
+			}
+			else {
+				pix->g = (pix->g * value);
+			}
+
+			if ((pix->b * value) > 255) {
+				pix->b = 255;
+			} 
+			else if ((pix->b * value) < 0) {
+				pix->b = 0;
+			}
+			else {
+				pix->b = (pix->b * value);
+			}
+		}	
+
+	saveRGB(output_path);
+}
+
+void grayscale(char input_path[], char output_path[]) {
+
 	loadHSV(input_path);
 	uint32_t count = heightPx * widthPx;
 
@@ -142,8 +187,8 @@ void grayscale(char input_path[], char output_path[])
 }
 
 // Select the color from the palette that exhibits the minimum Euclidean distance to the given pixel.
-static bitmap_pixel_rgb_t select_from_pal(bitmap_pixel_rgb_t pix)
-{
+static bitmap_pixel_rgb_t select_from_pal(bitmap_pixel_rgb_t pix) {
+
 	int dist = INT_MAX;
 	bitmap_pixel_rgb_t pal;
 
@@ -165,14 +210,14 @@ static bitmap_pixel_rgb_t select_from_pal(bitmap_pixel_rgb_t pix)
 }
 
 // Helper funcs for dithering
-static void apply_quant_err_comp(bitmap_component_t* c, int qe, int fac)
-{
+static void apply_quant_err_comp(bitmap_component_t* c, int qe, int fac) {
+
 	int new_c = *c + ((qe * fac) / 16);
 	*c = (new_c < 0) ? 0 : (new_c > 255) ? 255 : new_c;
 }
 
-static void apply_quant_err(bitmap_pixel_rgb_t* pixels, uint32_t width, uint32_t height, uint32_t x, uint32_t y, const int* qe, int fac)
-{
+static void apply_quant_err(bitmap_pixel_rgb_t* pixels, uint32_t width, uint32_t height, uint32_t x, uint32_t y, const int* qe, int fac) {
+
 	if ((x < width) && (y < height))
 	{
 		bitmap_pixel_rgb_t* pix = &pixels[(width * y) + x];
@@ -183,8 +228,8 @@ static void apply_quant_err(bitmap_pixel_rgb_t* pixels, uint32_t width, uint32_t
 	}
 }
 
-void floyd_steinberg(char input_path[], char output_path[])
-{
+void floyd_steinberg(char input_path[], char output_path[]) {
+
 
 	loadRGB(input_path);
 
@@ -216,8 +261,8 @@ void floyd_steinberg(char input_path[], char output_path[])
 
 }
 
-void color_seperation(char input_path[], char output_path[])
-{
+void color_seperation(char input_path[], char output_path[]) {
+
 	loadRGB(input_path);
 
 	for (uint32_t y = 0; y < heightPx; y++)
@@ -236,7 +281,7 @@ void color_seperation(char input_path[], char output_path[])
 	saveRGB(output_path);
 } 
 
-void invert_colors() {
+void invert_colors(char input_path[], char output_path[]) {
 
 	loadRGB(input_path);
 
