@@ -24,12 +24,6 @@ bitmap_pixel_rgb_t PAL[] =
 	{ .r = 0xFF, .g = 0xFF, .b = 0xFF }  // White
 };
 
-void copy_bmp(char input_path[], char output_path[]) {
-
-	loadHSV(input_path);
-	saveHSV(output_path);
-}
-
 static void loadHSV(char path[]) {
 
 	error = bitmapReadPixels(path, (bitmap_pixel_t**)&hsv_pixels, &widthPx, &heightPx, BITMAP_COLOR_SPACE_HSV);
@@ -131,8 +125,8 @@ void saturation(char input_path[], char output_path[], int value)
 	saveHSV(output_path);
 }
 
-void grayscale(char input_path[], char output_path[]) {
-
+void grayscale(char input_path[], char output_path[])
+{
 	loadHSV(input_path);
 	uint32_t count = heightPx * widthPx;
 
@@ -145,75 +139,6 @@ void grayscale(char input_path[], char output_path[]) {
 		}	
 
 	saveHSV(output_path);
-}
-
-// Sucht den V-Wert aus dem Bild heraus, den die meisten Pixel besitzen.
-static int find_dominant_color() {
-
-	uint32_t count = heightPx * widthPx;
-	int current_max = 0;
-	int dominant_color = 255;
-	int counters[256];
-
-	for (uint32_t x = 0; x < count; x++) {
-
-			bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
-
-			counters[pix->h]++;
-		}	
-
-	for (uint32_t x = 0; x <= 255; x++) {
-
-		// Ohne diese Ausgabe werden plötzlich ganz andere Werte als dominante Farbe ermittelt -> Quantentheorie? :o
-		printf("%d: %d | ", x, counters[x]);
-
-		if (counters[x] >= current_max) {
-
-			current_max = counters[x];
-			dominant_color = x;
-		}
-	}
-
-	return dominant_color;
-
-}
-
-void exclusive_grayscale(char input_path[], char output_path[], int tolerance) {
-
-	uint32_t count = heightPx * widthPx;
-	int dominant_color = find_dominant_color();
-
-	printf("Dominante Farbe: %d\n", dominant_color);
-
-		for (uint32_t x = 0; x < count; x++)
-		{
-
-			bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
-
-			if (abs(pix->h - dominant_color) >= tolerance) {
-				pix->s = 0;
-			}
-		}	
-}
-
-void colorswap(char input_path[], char output_path[], int old_color, int new_color, int tolerance) {
-
-	loadHSV(input_path);
-
-	uint32_t count = heightPx * widthPx;
-
-		for (uint32_t x = 0; x < count; x++)
-		{
-
-			bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
-
-			if (abs(pix->h - old_color) <= tolerance) {
-				pix->h = new_color;
-			}
-		}	
-
-	saveHSV(output_path);
-
 }
 
 // Select the color from the palette that exhibits the minimum Euclidean distance to the given pixel.
@@ -311,47 +236,19 @@ void color_seperation(char input_path[], char output_path[])
 	saveRGB(output_path);
 } 
 
-void color_enhancement(char input_path[], char output_path[], int color, float value)
-{
+void invert_colors() {
+
 	loadRGB(input_path);
-	bitmap_pixel_rgb_t pal_pix = PAL[color];
+
 	uint32_t count = heightPx * widthPx;
 
-		for (uint32_t x = 0; x < count; x++)
-		{
+		for (uint32_t x = 0; x < count; x++) {
 
 			bitmap_pixel_rgb_t* pix = &rgb_pixels[x];
 
-			if ((pix->r + value* pal_pix.r/255 * pix->r) > 255) {
-				pix->r = 255;
-			}
-			else if ((pix->r + value * pal_pix.r/255 * pix->r) < 0) {
-				pix->r = 0;
-			}
-			else {
-				pix->r = pix->r + (int)(value * pal_pix.r/255 * pix->r);
-			}
-
-			if ((pix->g + value * pal_pix.g/255 * pix->g) > 255) {
-				pix->g = 255;
-			}
-			else if ((pix->g + value * pal_pix.g/255 * pix->g) < 0) {
-				pix->g = 0;
-			}
-			else {
-				pix->g = pix->g + (int)(value * pal_pix.g/255 * pix->g);
-			}
-
-			if ((pix->b + value * pal_pix.b/255 * pix->b) > 255) {
-				pix->b = 255;
-			}
-			else if ((pix->b + value * pal_pix.b/255 * pix->b) < 0) {
-				pix->b = 0;
-			}
-			else {
-				pix->b = pix->b + (int)(value * pal_pix.b/255 * pix->b);
-			}
-			
+			pix->r = 255 - pix->r;
+			pix->g = 255 - pix->g;
+			pix->b = 255 - pix->b;
 		}	
 
 	saveRGB(output_path);

@@ -48,4 +48,7 @@ void color_enhancement(char input_path[], char output_path[], int color, float v
 // Eine Farbe wird durch eine andere ersetzt (HSV)
 void colorswap(char input_path[], char output_path[], int old_color, int new_color, int tolerance);
 
+// Invertieren der Farben
+void invert_colors();
+
 #endif
