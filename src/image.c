@@ -190,6 +190,25 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
     }
+    if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Floyd Steinberg") == 0)  
+    {
+        if (manipulated == false){
+          copy_bmp(file_name, "../img/old.bmp");        // backup of the original
+          copy_bmp(file_name, "../img/new.bmp");
+          manipulated = true;
+        } else {
+          copy_bmp("../img/new.bmp","../img/old.bmp");
+        }  
+        if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
+
+          floyd_steinberg("../img/old.bmp","../img/new.bmp");
+          show_image("../img/new.bmp");
+        } else {
+
+          g_print("\n\n\n\n Halllo \n\n\n\n\n\n");
+          show_image(file_name);
+        }
+    }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Exit") == 0)  
     {
         gtk_main_quit(); //quit the application
@@ -308,6 +327,11 @@ void set_exclusive_grayscale (GtkWidget* widget, gpointer data)
   }
 }
 
+void set_floyd_steinberg (GtkWidget* widget, gpointer data)
+{
+
+}
+
 /**********************************************************************************************************************************************************************
 	main()
 **********************************************************************************************************************************************************************/
@@ -380,8 +404,14 @@ int main (int    argc, char **argv)
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
-  // CheckMenu Grayscale
+
+  // CheckMenu 
   menu_item = gtk_check_menu_item_new_with_label("Grayscale");
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
+  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
+
+  menu_item = gtk_check_menu_item_new_with_mnemonic("Floyd Steinberg");
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
