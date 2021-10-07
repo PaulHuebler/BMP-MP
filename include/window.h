@@ -20,6 +20,7 @@ void set_brightness (GtkWidget* widget, gpointer data);
 void set_saturation (GtkWidget* widget, gpointer data);
 void set_contrast (GtkWidget* widget, gpointer data);
 void set_exclusive_grayscale (GtkWidget* widget, gpointer data);
+void set_floyd_steinberg (GtkWidget* widget, gpointer data);
 
 
 
