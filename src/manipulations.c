@@ -439,3 +439,84 @@ void mirror_hor(char input_path[], char output_path[]) {
 
 	saveRGB(output_path);
 }
+
+// Grundlagen wurden aus diesem Eintrag entnommen und angepasst: https://stackoverflow.com/questions/42186498/gaussian-blur-image-processing-c
+static int calc_gauss_pixel(int col, int row, int width, int height, char component) {
+
+    int sum = 0;
+    int divisor = 0;
+	int color = 0;
+	
+
+    for (int j = -1; j <= 1; j++) {
+
+        for (int i = -1; i <= 1; i++) {
+
+            if ((row + j) >= 0 && (row + j) < height && (col + i) >= 0 && (col + i) < width) {
+
+				bitmap_pixel_rgb_t* pix = &rgb_pixels[(row + j) * width + (col + i)];
+
+				switch(component) {
+
+					case 'r':
+						color = pix->r;
+						break;
+
+					case 'g':
+						color = pix->g;
+						break;
+
+					case 'b':
+						color = pix->b;
+						break;
+
+					default:
+						printf("Etwas ist schief gelaufen (calc_gauss_pixel)");
+				}
+
+                sum += (int)(color * kernel[i + 1][j + 1]);
+                divisor += kernel[i + 1][j + 1];
+				
+            }
+        }
+    }
+
+    return (int)(sum / divisor);
+
+}
+
+void gaussian_blur2D(char input_path[], char output_path[]) {
+
+	loadRGB(input_path);
+
+	int width = (int)widthPx;
+	int height = (int)heightPx; 
+
+	bitmap_pixel_rgb_t* result = rgb_pixels;
+
+    for (int row = 0; row < height; row++) {
+
+        for (int col = 0; col < width; col++) {
+           
+			bitmap_pixel_rgb_t* pix = &result[row * width + col ];
+				
+            pix->r = calc_gauss_pixel(col, row, width, height, 'r');
+			pix->g = calc_gauss_pixel(col, row, width, height, 'g');
+			pix->b = calc_gauss_pixel(col, row, width, height, 'b');
+            
+        }
+    }
+
+	uint32_t count = heightPx * widthPx;
+
+	// Zuweisen der Pixel aus result in rgb_pixels zum speichern
+	for (uint32_t x = 0; x < count; x++) {
+
+		bitmap_pixel_rgb_t* pix1 = &rgb_pixels[x];
+		bitmap_pixel_rgb_t* pix2 = &result[x];
+
+		*pix1 = *pix2;
+	}	
+
+	saveRGB(output_path);
+}

@@ -21,6 +21,9 @@ static void saveRGB(char path[]);
 // Findet den H-Wert (0-255), den die meisten Pixel im Bild besitzen (HSV)
 static int find_dominant_color();
 
+// Zum Berechnen der Einzelnen Pixel für den Gaussian Blur Filter (RGB)
+static int calc_gauss_pixel(int col, int row, int width, int height, char component);
+
 // Kopiert eine Bitmap mittels des Pixel-Arrays an einen neuen Speicherort (HSV)
 void copy_bmp(char input_path[], char output_path[]);
 
@@ -62,5 +65,8 @@ void mirror_vert(char input_path[], char output_path[]);
 
 // Spiegelt das Bild horizontal (RGB)
 void mirror_hor(char input_path[], char output_path[]);
+
+// Wendet einen Unschärfe-Filter auf das Bild an (RGB)
+void gaussian_blur2D(char input_path[], char output_path[]);
 
 #endif
