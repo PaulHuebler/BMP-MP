@@ -520,3 +520,49 @@ void gaussian_blur2D(char input_path[], char output_path[]) {
 
 	saveRGB(output_path);
 }
+
+void temperature(char input_path[], char output_path[], float value) {
+
+	loadRGB(input_path);
+
+	uint32_t count = heightPx * widthPx;
+
+	value = value/2;
+
+		for (uint32_t x = 0; x < count; x++) {
+
+			bitmap_pixel_rgb_t* pix = &rgb_pixels[x];
+
+			if (pix->r + pix->r * value >= 255) {
+				pix->r = 255;
+			} 
+			else if (pix->r + pix->r * value < 0) {
+				pix->r = 0;
+			} 
+			else {
+				pix->r += pix->r * value;
+			}
+
+			if (pix->g + pix->g * value >= 255) {
+				pix->g = 255;
+			} 
+			else if (pix->g + pix->g * value < 0) {
+				pix->g = 0;
+			} 
+			else {
+				pix->g += pix->g * value;
+			}
+
+			if (pix->b - pix->b * value <= 0) {
+				pix->b = 0;
+			} 
+			else if (pix->b - pix->b * value > 255) {
+				pix->b = 255;
+			} 
+			else {
+				pix->b -= pix->b * value;
+			}
+		}	
+
+	saveRGB(output_path);
+}

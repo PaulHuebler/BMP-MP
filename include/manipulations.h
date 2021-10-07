@@ -69,4 +69,7 @@ void mirror_hor(char input_path[], char output_path[]);
 // Wendet einen Unschärfe-Filter auf das Bild an (RGB)
 void gaussian_blur2D(char input_path[], char output_path[]);
 
+// Passt die Farbtemperatur des Bildes an (Naive Implementation). value sollte zwischen -1 und 1 liegen (RGB)
+void temperature(char input_path[], char output_path[], float value);
+
 #endif
