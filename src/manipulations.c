@@ -24,6 +24,10 @@ bitmap_pixel_rgb_t PAL[] =
 	{ .r = 0xFF, .g = 0xFF, .b = 0xFF }  // White
 };
 
+int kernel[3][3] = { 1, 2, 1,
+                   2, 4, 2,
+                   1, 2, 1 };
+
 static void loadHSV(char path[]) {
 
 	error = bitmapReadPixels(path, (bitmap_pixel_t**)&hsv_pixels, &widthPx, &heightPx, BITMAP_COLOR_SPACE_HSV);
