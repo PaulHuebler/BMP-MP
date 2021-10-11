@@ -411,7 +411,7 @@ void mirror_vert(char input_path[], char output_path[]) {
 			for (uint32_t y = 0; y < widthPx/2; y++) {
 
 				bitmap_pixel_rgb_t* pix1 = &rgb_pixels[x*widthPx + y];
-				bitmap_pixel_rgb_t* pix2 = &rgb_pixels[x*widthPx + widthPx - y];
+				bitmap_pixel_rgb_t* pix2 = &rgb_pixels[x*widthPx + widthPx - y - 1];
 				bitmap_pixel_rgb_t* temp = &rgb_pixels[0];
 				*temp = *pix1;
 				*pix1 = *pix2;
@@ -433,7 +433,7 @@ void mirror_hor(char input_path[], char output_path[]) {
 			for (uint32_t y = 0; y < heightPx/2; y++) {
 
 				bitmap_pixel_rgb_t* pix1 = &rgb_pixels[y*widthPx + x];
-				bitmap_pixel_rgb_t* pix2 = &rgb_pixels[(heightPx - y)*widthPx + x];
+				bitmap_pixel_rgb_t* pix2 = &rgb_pixels[(heightPx - y - 1)*widthPx + x];
 				bitmap_pixel_rgb_t* temp = &rgb_pixels[0];
 				*temp = *pix1;
 				*pix1 = *pix2;
