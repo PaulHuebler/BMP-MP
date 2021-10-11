@@ -19,8 +19,17 @@ static void show_image(char *file_path);
 void set_brightness (GtkWidget* widget, gpointer data);
 void set_saturation (GtkWidget* widget, gpointer data);
 void set_contrast (GtkWidget* widget, gpointer data);
+
 void set_exclusive_grayscale (GtkWidget* widget, gpointer data);
-void set_floyd_steinberg (GtkWidget* widget, gpointer data);
+void set_floyd_steinberg (GtkWidget* menu_item, gpointer data);
+void set_grayscale (GtkWidget* menu_item, gpointer data);
+void set_color_seperation (GtkWidget* menu_item, gpointer data);
+
+void set_invert_colors (GtkWidget* menu_item, gpointer data);
+void set_sepia (GtkWidget* menu_item, gpointer data);
+void set_mirror_vert (GtkWidget* menu_item, gpointer data);
+void set_mirror_hor (GtkWidget* menu_item, gpointer data);
+
 
 
 
