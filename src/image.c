@@ -18,6 +18,15 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Open") == 0)   
     {
+/*      
+        GList *children, *iter;
+
+        children = gtk_container_get_children(GTK_CONTAINER(layout));
+        for(iter = children; iter != NULL; iter = g_list_next(iter))
+          gtk_widget_destroy(GTK_WIDGET(iter->data));
+        g_list_free(children); */
+
+
         fdialog = create_filechooser_dialog(fname, GTK_FILE_CHOOSER_ACTION_OPEN);
         if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_OK) {
           fname = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fdialog));
@@ -190,7 +199,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
     }
-    if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Floyd Steinberg") == 0)  
+    /*if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Floyd Steinberg") == 0)  
     {
         if (manipulated == false){
           copy_bmp(file_name, "../img/old.bmp");        // backup of the original
@@ -208,7 +217,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
           g_print("\n\n\n\n Halllo \n\n\n\n\n\n");
           show_image(file_name);
         }
-    }
+    }*/
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Exit") == 0)  
     {
         gtk_main_quit(); //quit the application
@@ -259,7 +268,7 @@ static void show_image(char *file_path)
 
 }
 
-/**********************************************************************************************************************************************************************
+/************************************^**********************************************************************************************************************************
 	Callback to Manipulation functions
 **********************************************************************************************************************************************************************/
 
@@ -298,7 +307,7 @@ void set_contrast (GtkWidget* widget, gpointer data)
   int i = GPOINTER_TO_INT(data);
   current_float_value = ((current_float_value) + (i/100.0f));
 
-  if (GPOINTER_TO_INT(data) == 0){
+  if (GPOINTER_TO_INT(data) == 0){                                              // UNDO
     current_float_value = 1.0;
     copy_bmp("../img/old.bmp","../img/new.bmp");
     show_image("../img/old.bmp");
@@ -327,9 +336,157 @@ void set_exclusive_grayscale (GtkWidget* widget, gpointer data)
   }
 }
 
-void set_floyd_steinberg (GtkWidget* widget, gpointer data)
+void set_grayscale (GtkWidget* menu_item, gpointer data)
 {
+  if (manipulated == false){
+      copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
+      copy_bmp(file_name, "../img/new.bmp");
+      manipulated = true;
+  } else {
+      //copy_bmp("../img/new.bmp","../img/old.bmp");
+  }  
 
+  if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
+
+      grayscale("../img/old.bmp","../img/new.bmp");
+      show_image("../img/new.bmp");
+  } else {
+
+      g_print("\n\n\n\n Halllo \n\n\n\n\n\n");
+      show_image("../img/old.bmp");
+  }
+}
+
+void set_floyd_steinberg (GtkWidget* menu_item, gpointer data)
+{
+  if (manipulated == false){
+      copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
+      copy_bmp(file_name, "../img/new.bmp");
+      manipulated = true;
+  } else {
+      //manipulated = ;
+      //copy_bmp("../img/new.bmp","../img/old.bmp");
+  }  
+
+  if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
+
+      floyd_steinberg("../img/old.bmp","../img/new.bmp");
+      show_image("../img/new.bmp");
+  } else {
+
+      g_print("\n\n\n\n Halllo \n\n\n\n\n\n");
+      show_image("../img/old.bmp");
+  }
+}
+
+void set_color_seperation (GtkWidget* menu_item, gpointer data)
+{
+  if (manipulated == false){
+      copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
+      copy_bmp(file_name, "../img/new.bmp");
+      manipulated = true;
+  } else {
+      //manipulated = ;
+      //copy_bmp("../img/new.bmp","../img/old.bmp");
+  }  
+
+  if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
+
+      color_seperation("../img/old.bmp","../img/new.bmp");
+      show_image("../img/new.bmp");
+  } else {
+
+      g_print("\n\n\n\n Test \n\n\n\n\n\n");
+      show_image("../img/old.bmp");
+  }
+}
+
+void set_invert_colors (GtkWidget* menu_item, gpointer data)
+{
+  if (manipulated == false){
+      copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
+      copy_bmp(file_name, "../img/new.bmp");
+      manipulated = true;
+  } else {
+      //manipulated = ;
+      //copy_bmp("../img/new.bmp","../img/old.bmp");
+  }  
+
+  if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
+
+      invert_colors("../img/old.bmp","../img/new.bmp");
+      show_image("../img/new.bmp");
+  } else {
+
+      g_print("\n\n\n\n Test \n\n\n\n\n\n");
+      show_image("../img/old.bmp");
+  }
+}
+
+void set_sepia (GtkWidget* menu_item, gpointer data)
+{
+  if (manipulated == false){
+      copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
+      copy_bmp(file_name, "../img/new.bmp");
+      manipulated = true;
+  } else {
+      //manipulated = ;
+      //copy_bmp("../img/new.bmp","../img/old.bmp");
+  }  
+
+  if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
+
+      sepia("../img/old.bmp","../img/new.bmp");
+      show_image("../img/new.bmp");
+  } else {
+
+      g_print("\n\n\n\n Test \n\n\n\n\n\n");
+      show_image("../img/old.bmp");
+  }
+}
+
+void set_mirror_vert (GtkWidget* menu_item, gpointer data)
+{
+  if (manipulated == false){
+      copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
+      copy_bmp(file_name, "../img/new.bmp");
+      manipulated = true;
+  } else {
+      //manipulated = ;
+      //copy_bmp("../img/new.bmp","../img/old.bmp");
+  }  
+
+  if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
+
+      mirror_vert("../img/old.bmp","../img/new.bmp");
+      show_image("../img/new.bmp");
+  } else {
+
+      g_print("\n\n\n\n Test \n\n\n\n\n\n");
+      show_image("../img/old.bmp");
+  }
+}
+
+void set_mirror_hor (GtkWidget* menu_item, gpointer data)
+{
+  if (manipulated == false){
+      copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
+      copy_bmp(file_name, "../img/new.bmp");
+      manipulated = true;
+  } else {
+      //manipulated = ;
+      //copy_bmp("../img/new.bmp","../img/old.bmp");
+  }  
+
+  if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
+
+      mirror_hor("../img/old.bmp","../img/new.bmp");
+      show_image("../img/new.bmp");
+  } else {
+
+      g_print("\n\n\n\n Test \n\n\n\n\n\n");
+      show_image("../img/old.bmp");
+  }
 }
 
 /**********************************************************************************************************************************************************************
@@ -409,12 +566,39 @@ int main (int    argc, char **argv)
   menu_item = gtk_check_menu_item_new_with_label("Grayscale");
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
-  g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
+  g_signal_connect(menu_item, "activate", G_CALLBACK(set_grayscale), NULL);
 
   menu_item = gtk_check_menu_item_new_with_mnemonic("Floyd Steinberg");
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
-  g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
+  g_signal_connect(menu_item, "activate", G_CALLBACK(set_floyd_steinberg), NULL);
+
+  menu_item = gtk_check_menu_item_new_with_mnemonic("Color Seperation");
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
+  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  g_signal_connect(menu_item, "activate", G_CALLBACK(set_color_seperation), NULL);
+
+  menu_item = gtk_check_menu_item_new_with_mnemonic("Invert Colors");
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
+  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  g_signal_connect(menu_item, "activate", G_CALLBACK(set_invert_colors), NULL);
+
+  menu_item = gtk_check_menu_item_new_with_mnemonic("Sepia");
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
+  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  g_signal_connect(menu_item, "activate", G_CALLBACK(set_sepia), NULL);
+
+  menu_item = gtk_check_menu_item_new_with_mnemonic("Mirror (vertical)");
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
+  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  g_signal_connect(menu_item, "activate", G_CALLBACK(set_mirror_vert), NULL);
+
+  menu_item = gtk_check_menu_item_new_with_mnemonic("Mirror (horizontal)");
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
+  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  g_signal_connect(menu_item, "activate", G_CALLBACK(set_mirror_hor), NULL);
+
+
 
   vbox = gtk_box_new(0,0);
   gtk_box_pack_start(GTK_BOX(vbox), menu_bar,1,0,0);
