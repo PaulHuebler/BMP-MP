@@ -1,7 +1,11 @@
+#define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 
 #include "../include/bitmap.h"
 #include "../include/manipulations.h"
@@ -14,28 +18,18 @@
 static void menu_response(GtkWidget* menu_item, gpointer data)
 {
     GtkWidget *fdialog = NULL;
-    char *fname;
 
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Open") == 0)   
     {
-/*      
-        GList *children, *iter;
-
-        children = gtk_container_get_children(GTK_CONTAINER(layout));
-        for(iter = children; iter != NULL; iter = g_list_next(iter))
-          gtk_widget_destroy(GTK_WIDGET(iter->data));
-        g_list_free(children); */
-
-
-        fdialog = create_filechooser_dialog(fname, GTK_FILE_CHOOSER_ACTION_OPEN);
+        fdialog = create_filechooser_dialog(file_name, GTK_FILE_CHOOSER_ACTION_OPEN);
         if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_OK) {
-          fname = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fdialog));
-          g_print("%s\n", fname);
-          gtk_image_new_from_file(fname);
+          file_name = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fdialog));
+          g_print("%s\n", file_name);
+          gtk_image_new_from_file(file_name);
           gtk_widget_destroy(fdialog);
-          file_name = fname;
-          show_image(fname);
-          copy_bmp(file_name, "../img/old.bmp");        // backup of the original
+          manipulate_image = file_name;
+          show_image(file_name);
+          save(file_name);
         }
 /* TODO Bugfix: Cancel -> Window schleißen 
         if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_CANCEL) {
@@ -46,13 +40,11 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Brightness") == 0)  
     {
-        if (manipulated == 0){
-          copy_bmp(file_name, "../img/old.bmp");        // backup of the original
-          copy_bmp(file_name, "../img/new.bmp");
-          manipulated = 1;
-        } else {
-          copy_bmp("../img/new.bmp","../img/old.bmp");
-        }  
+      if (index_img == 0){
+        printf("No image loaded!\n");
+      } else {
+        save (manipulate_image);
+      }
 
         GtkWidget *plus_btn, *minus_btn, *undo_btn;
         GtkWidget *frame_b;
@@ -61,16 +53,16 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         plus_btn = gtk_button_new_with_label("+10");
         minus_btn = gtk_button_new_with_label("-10");
-        undo_btn = gtk_button_new_with_label("UNDO");
+        //undo_btn = gtk_button_new_with_label("UNDO");
         gtk_layout_put(GTK_LAYOUT(layout), minus_btn, 100, 680);
         gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, 680);
-        gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, 680);
+        //gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, 680);
         g_signal_connect (G_OBJECT(minus_btn), "clicked", 
                           G_CALLBACK(set_brightness), GINT_TO_POINTER(m));
         g_signal_connect (G_OBJECT(plus_btn), "clicked", 
                           G_CALLBACK(set_brightness), GINT_TO_POINTER(p));
-        g_signal_connect (G_OBJECT(undo_btn), "clicked", 
-                          G_CALLBACK(set_brightness), GINT_TO_POINTER(0));
+        /*g_signal_connect (G_OBJECT(undo_btn), "clicked", 
+                          G_CALLBACK(set_brightness), GINT_TO_POINTER(0));*/
                           
         frame_b = gtk_frame_new("Brightness");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -79,6 +71,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
     }
+  /*  
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Saturation") == 0)  
     {   
         if (manipulated == false){
@@ -198,7 +191,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
-    }
+    }*/
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Exit") == 0)  
     {
         gtk_main_quit(); //quit the application
@@ -206,7 +199,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "About") == 0)
     {
         g_print("You pressed About\n");
-    }
+    } 
 }
 
 GtkWidget * create_filechooser_dialog (char *init_path, GtkFileChooserAction action)
@@ -253,14 +246,43 @@ static void show_image (char *file_path)
 	UNDO / REDO / SAVE
 **********************************************************************************************************************************************************************/
 
-void image_array_add (char *new_image)
+void save (char *new_image)
 {
-
+  if (index_img == 0){
+    // Create a backup of the opened file
+    char output_path[256] = "";
+    char *index_string = "";
+    asprintf(&index_string, "%d", index_img);
+    memccpy(memccpy(memccpy(output_path, "../img/", '\0', 256) -1, index_string, '\0', 256) -1, ".bmp", '\0', 256);
+    copy_bmp(file_name,output_path);
+    manipulate_image = output_path;
+    index_img++;
+  } else {
+    // Save the new State of the image with the current index
+    char output_path[256] = "";
+    char *index_string = "";
+    asprintf(&index_string, "%d", index_img);
+    memccpy(memccpy(memccpy(output_path, "../img/", '\0', 256) -1, index_string, '\0', 256) -1, ".bmp", '\0', 256);
+    copy_bmp(new_image,output_path);
+    manipulate_image = output_path;
+    index_img++;
+  }
 }
 
-void undo ()
+void undo (char *new_image)
 {
-
+  if (IsDirty == true){
+    save (new_image);
+    index_img--;
+    IsDirty = false;
+  }
+  index_img--;
+  char output_path[256]; 
+  char *index_string = "";
+  asprintf(&index_string, "%d", index_img);
+  memccpy(memccpy(memccpy(output_path, "../img/", '\0', 256) -1, index_string, '\0', 256) -1, ".bmp", '\0', 256);    
+  show_image(output_path);
+  manipulate_image = output_path;
 }
 
 void redo ()
@@ -268,30 +290,17 @@ void redo ()
 
 }
 
-void save ()
-{
-
-}
-
-
 /************************************^**********************************************************************************************************************************
 	Callback to Manipulation functions
 **********************************************************************************************************************************************************************/
 
 void set_brightness (GtkWidget* widget, gpointer data)
 {
-  char *output_path = "../img/new.bmp";
-
-  if (GPOINTER_TO_INT(data) == 0){                          // UNDO-action
-    copy_bmp("../img/old.bmp","../img/new.bmp");  
-    show_image("../img/old.bmp");
-  }
-  if (GPOINTER_TO_INT(data) != 0){
-    brightness("../img/new.bmp", output_path, GPOINTER_TO_INT(data));
-    show_image(output_path);
-  }
+  int value = GPOINTER_TO_INT(data);
+  brightness(manipulate_image, manipulate_image, value);
+  show_image(manipulate_image);
 }
-
+/*
 void set_saturation (GtkWidget* widget, gpointer data)
 {
   char *output_path = "../img/new.bmp";
@@ -493,7 +502,7 @@ void set_mirror_hor (GtkWidget* menu_item, gpointer data)
       show_image("../img/old.bmp");
   }
 }
-
+*/
 /**********************************************************************************************************************************************************************
 	main()
 **********************************************************************************************************************************************************************/
@@ -553,7 +562,7 @@ int main (int    argc, char **argv)
   menu_item = gtk_menu_item_new_with_label("Brightness");
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
-
+/*
   menu_item = gtk_menu_item_new_with_label("Saturation");
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
@@ -602,7 +611,7 @@ int main (int    argc, char **argv)
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(set_mirror_hor), NULL);
-
+*/
 
 
   vbox = gtk_box_new(0,0);
@@ -619,7 +628,7 @@ int main (int    argc, char **argv)
   
   g_signal_connect(G_OBJECT(undo_button), "clicked", G_CALLBACK(undo), NULL);
   g_signal_connect(G_OBJECT(redo_button), "clicked", G_CALLBACK(redo), NULL);
-  g_signal_connect(G_OBJECT(save_button), "clicked", G_CALLBACK(set_mirror_hor), NULL);
+  g_signal_connect(G_OBJECT(save_button), "clicked", G_CALLBACK(save), NULL);
 
 
   gtk_widget_show_all(window);
