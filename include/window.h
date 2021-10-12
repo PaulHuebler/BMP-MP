@@ -7,9 +7,10 @@
 static GtkWidget *window;
 static GtkWidget *layout;
 char *file_name;
-bool manipulated = false;
+int manipulated = 0;                     // for UNDO/ REDO function and  Save operation (current image state)
 float current_float_value = 1.0;
 int current_int_value = 0;
+
 
 // Funktionen zum Erstellen von Filechooserdialog und Imageabbildung
 GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action);

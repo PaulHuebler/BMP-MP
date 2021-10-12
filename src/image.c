@@ -46,10 +46,10 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Brightness") == 0)  
     {
-        if (manipulated == false){
+        if (manipulated == 0){
           copy_bmp(file_name, "../img/old.bmp");        // backup of the original
           copy_bmp(file_name, "../img/new.bmp");
-          manipulated = true;
+          manipulated = 1;
         } else {
           copy_bmp("../img/new.bmp","../img/old.bmp");
         }  
@@ -199,25 +199,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
     }
-    /*if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Floyd Steinberg") == 0)  
-    {
-        if (manipulated == false){
-          copy_bmp(file_name, "../img/old.bmp");        // backup of the original
-          copy_bmp(file_name, "../img/new.bmp");
-          manipulated = true;
-        } else {
-          copy_bmp("../img/new.bmp","../img/old.bmp");
-        }  
-        if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
-
-          floyd_steinberg("../img/old.bmp","../img/new.bmp");
-          show_image("../img/new.bmp");
-        } else {
-
-          g_print("\n\n\n\n Halllo \n\n\n\n\n\n");
-          show_image(file_name);
-        }
-    }*/
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Exit") == 0)  
     {
         gtk_main_quit(); //quit the application
@@ -228,7 +209,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     }
 }
 
-GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction action)
+GtkWidget * create_filechooser_dialog (char *init_path, GtkFileChooserAction action)
 {
   GtkWidget *fdialog = NULL;
 
@@ -255,7 +236,7 @@ GtkWidget * create_filechooser_dialog(char *init_path, GtkFileChooserAction acti
   return fdialog;
 }
 
-static void show_image(char *file_path)
+static void show_image (char *file_path)
 {
   GtkWidget *image;
   
@@ -267,6 +248,31 @@ static void show_image(char *file_path)
   gtk_widget_show_all(window);
 
 }
+
+/************************************^**********************************************************************************************************************************
+	UNDO / REDO / SAVE
+**********************************************************************************************************************************************************************/
+
+void image_array_add (char *new_image)
+{
+
+}
+
+void undo ()
+{
+
+}
+
+void redo ()
+{
+
+}
+
+void save ()
+{
+
+}
+
 
 /************************************^**********************************************************************************************************************************
 	Callback to Manipulation functions
@@ -338,12 +344,12 @@ void set_exclusive_grayscale (GtkWidget* widget, gpointer data)
 
 void set_grayscale (GtkWidget* menu_item, gpointer data)
 {
-  if (manipulated == false){
+  if (manipulated == 0){
       copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
       copy_bmp(file_name, "../img/new.bmp");
-      manipulated = true;
+      manipulated = 1;
   } else {
-      //copy_bmp("../img/new.bmp","../img/old.bmp");
+      copy_bmp("../img/new.bmp","../img/old.bmp");
   }  
 
   if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
@@ -359,10 +365,10 @@ void set_grayscale (GtkWidget* menu_item, gpointer data)
 
 void set_floyd_steinberg (GtkWidget* menu_item, gpointer data)
 {
-  if (manipulated == false){
+  if (manipulated == 0){
       copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
       copy_bmp(file_name, "../img/new.bmp");
-      manipulated = true;
+      manipulated = 1;
   } else {
       //manipulated = ;
       //copy_bmp("../img/new.bmp","../img/old.bmp");
@@ -381,12 +387,11 @@ void set_floyd_steinberg (GtkWidget* menu_item, gpointer data)
 
 void set_color_seperation (GtkWidget* menu_item, gpointer data)
 {
-  if (manipulated == false){
+  if (manipulated == 0){
       copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
       copy_bmp(file_name, "../img/new.bmp");
-      manipulated = true;
+      manipulated = 1;
   } else {
-      //manipulated = ;
       //copy_bmp("../img/new.bmp","../img/old.bmp");
   }  
 
@@ -403,10 +408,10 @@ void set_color_seperation (GtkWidget* menu_item, gpointer data)
 
 void set_invert_colors (GtkWidget* menu_item, gpointer data)
 {
-  if (manipulated == false){
+  if (manipulated == 0){
       copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
       copy_bmp(file_name, "../img/new.bmp");
-      manipulated = true;
+      manipulated = 1;
   } else {
       //manipulated = ;
       //copy_bmp("../img/new.bmp","../img/old.bmp");
@@ -425,10 +430,10 @@ void set_invert_colors (GtkWidget* menu_item, gpointer data)
 
 void set_sepia (GtkWidget* menu_item, gpointer data)
 {
-  if (manipulated == false){
+  if (manipulated == 0){
       copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
       copy_bmp(file_name, "../img/new.bmp");
-      manipulated = true;
+      manipulated = 1;
   } else {
       //manipulated = ;
       //copy_bmp("../img/new.bmp","../img/old.bmp");
@@ -447,10 +452,10 @@ void set_sepia (GtkWidget* menu_item, gpointer data)
 
 void set_mirror_vert (GtkWidget* menu_item, gpointer data)
 {
-  if (manipulated == false){
+  if (manipulated == 0){
       copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
       copy_bmp(file_name, "../img/new.bmp");
-      manipulated = true;
+      manipulated = 1;
   } else {
       //manipulated = ;
       //copy_bmp("../img/new.bmp","../img/old.bmp");
@@ -469,10 +474,10 @@ void set_mirror_vert (GtkWidget* menu_item, gpointer data)
 
 void set_mirror_hor (GtkWidget* menu_item, gpointer data)
 {
-  if (manipulated == false){
+  if (manipulated == 0){
       copy_bmp(file_name, "../img/old.bmp");                                    // backup of the original
       copy_bmp(file_name, "../img/new.bmp");
-      manipulated = true;
+      manipulated = 1;
   } else {
       //manipulated = ;
       //copy_bmp("../img/new.bmp","../img/old.bmp");
@@ -495,7 +500,7 @@ void set_mirror_hor (GtkWidget* menu_item, gpointer data)
 
 int main (int    argc, char **argv)
 {
-  GtkWidget *menu_bar, *menu_item, *file_menu, *help_menu, *vbox, *save_button,
+  GtkWidget *menu_bar, *menu_item, *file_menu, *help_menu, *vbox, *save_button, *undo_button, *redo_button,
             *tools_menu;
 
   gtk_init(&argc, &argv);
@@ -562,11 +567,11 @@ int main (int    argc, char **argv)
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
 
-  // CheckMenu 
+// CheckMenuItems
   menu_item = gtk_check_menu_item_new_with_label("Grayscale");
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
-  g_signal_connect(menu_item, "activate", G_CALLBACK(set_grayscale), NULL);
+  g_signal_connect(menu_item, "toggle", G_CALLBACK(set_grayscale), NULL);
 
   menu_item = gtk_check_menu_item_new_with_mnemonic("Floyd Steinberg");
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
@@ -602,10 +607,20 @@ int main (int    argc, char **argv)
 
   vbox = gtk_box_new(0,0);
   gtk_box_pack_start(GTK_BOX(vbox), menu_bar,1,0,0);
+  
+  undo_button = gtk_button_new_with_label("UNDO");
+  redo_button = gtk_button_new_with_label("REDO");
   save_button = gtk_button_new_with_label("SAVE");
-  gtk_box_pack_start(GTK_BOX(vbox), save_button,0,0,0);
+  
+  gtk_box_pack_start(GTK_BOX(vbox), undo_button,0,0,0);
+  gtk_box_pack_start(GTK_BOX(vbox), redo_button,10,0,0);
+  gtk_box_pack_start(GTK_BOX(vbox), save_button,20,0,0);
   gtk_layout_put(GTK_LAYOUT(layout), vbox, 0, 0);
   
+  g_signal_connect(G_OBJECT(undo_button), "clicked", G_CALLBACK(undo), NULL);
+  g_signal_connect(G_OBJECT(redo_button), "clicked", G_CALLBACK(redo), NULL);
+  g_signal_connect(G_OBJECT(save_button), "clicked", G_CALLBACK(set_mirror_hor), NULL);
+
 
   gtk_widget_show_all(window);
 
