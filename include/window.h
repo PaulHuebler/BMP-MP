@@ -9,7 +9,7 @@ static GtkWidget *layout;
 
 char *file_name;
 // the image that should be manipulated
-char *manipulate_image;
+char *manipulate_img;
 
 float current_float_value = 1.0;
 int current_int_value = 0;

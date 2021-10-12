@@ -1,11 +1,12 @@
 #define _GNU_SOURCE
+
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 #include "../include/bitmap.h"
 #include "../include/manipulations.h"
@@ -27,7 +28,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
           g_print("%s\n", file_name);
           gtk_image_new_from_file(file_name);
           gtk_widget_destroy(fdialog);
-          manipulate_image = file_name;
+          manipulate_img = file_name;
           show_image(file_name);
           save(file_name);
         }
@@ -43,7 +44,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (index_img == 0){
         printf("No image loaded!\n");
       } else {
-        save (manipulate_image);
+        save (manipulate_img);
       }
 
         GtkWidget *plus_btn, *minus_btn, *undo_btn;
@@ -255,7 +256,7 @@ void save (char *new_image)
     asprintf(&index_string, "%d", index_img);
     memccpy(memccpy(memccpy(output_path, "../img/", '\0', 256) -1, index_string, '\0', 256) -1, ".bmp", '\0', 256);
     copy_bmp(file_name,output_path);
-    manipulate_image = output_path;
+    manipulate_img = output_path;
     index_img++;
   } else {
     // Save the new State of the image with the current index
@@ -264,7 +265,7 @@ void save (char *new_image)
     asprintf(&index_string, "%d", index_img);
     memccpy(memccpy(memccpy(output_path, "../img/", '\0', 256) -1, index_string, '\0', 256) -1, ".bmp", '\0', 256);
     copy_bmp(new_image,output_path);
-    manipulate_image = output_path;
+    manipulate_img = output_path;
     index_img++;
   }
 }
@@ -282,7 +283,7 @@ void undo (char *new_image)
   asprintf(&index_string, "%d", index_img);
   memccpy(memccpy(memccpy(output_path, "../img/", '\0', 256) -1, index_string, '\0', 256) -1, ".bmp", '\0', 256);    
   show_image(output_path);
-  manipulate_image = output_path;
+  manipulate_img = output_path;
 }
 
 void redo ()
@@ -297,8 +298,8 @@ void redo ()
 void set_brightness (GtkWidget* widget, gpointer data)
 {
   int value = GPOINTER_TO_INT(data);
-  brightness(manipulate_image, manipulate_image, value);
-  show_image(manipulate_image);
+  brightness(manipulate_img, manipulate_img, value);
+  show_image(manipulate_img);
 }
 /*
 void set_saturation (GtkWidget* widget, gpointer data)
