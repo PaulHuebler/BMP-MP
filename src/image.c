@@ -28,7 +28,10 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
           g_print("%s\n", file_name);
           gtk_image_new_from_file(file_name);
           gtk_widget_destroy(fdialog);
-          manipulate_img = file_name;
+          copy_bmp(file_name, index_path(0));
+          file_name = index_path(0);
+          original_file = file_name;
+          printf("\n\n1\n%d\n\n\n",current_index);
           show_image(file_name);
           save(file_name);
         }
@@ -41,36 +44,38 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Brightness") == 0)  
     {
-      if (index_img == 0){
-        printf("No image loaded!\n");
-      } else {
-        save (manipulate_img);
-      }
+        if (current_index == 0){
+            printf("No image loaded!\n");
+        } else {
 
-        GtkWidget *plus_btn, *minus_btn, *undo_btn;
-        GtkWidget *frame_b;
-        int p = 10;
-        int m = -10;
+            if (file_name != index_path(current_index)){
+                save (file_name);
+            }
+            GtkWidget *plus_btn, *minus_btn, *undo_btn;
+            GtkWidget *frame_b;
+            int p = 10;
+            int m = -10;
 
-        plus_btn = gtk_button_new_with_label("+10");
-        minus_btn = gtk_button_new_with_label("-10");
-        //undo_btn = gtk_button_new_with_label("UNDO");
-        gtk_layout_put(GTK_LAYOUT(layout), minus_btn, 100, 680);
-        gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, 680);
-        //gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, 680);
-        g_signal_connect (G_OBJECT(minus_btn), "clicked", 
-                          G_CALLBACK(set_brightness), GINT_TO_POINTER(m));
-        g_signal_connect (G_OBJECT(plus_btn), "clicked", 
-                          G_CALLBACK(set_brightness), GINT_TO_POINTER(p));
-        /*g_signal_connect (G_OBJECT(undo_btn), "clicked", 
-                          G_CALLBACK(set_brightness), GINT_TO_POINTER(0));*/
-                          
-        frame_b = gtk_frame_new("Brightness");
-        gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+            plus_btn = gtk_button_new_with_label("+10");
+            minus_btn = gtk_button_new_with_label("-10");
+            //undo_btn = gtk_button_new_with_label("UNDO");
+            gtk_layout_put(GTK_LAYOUT(layout), minus_btn, 100, 680);
+            gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, 680);
+            //gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, 680);
+            g_signal_connect (G_OBJECT(minus_btn), "clicked", 
+                            G_CALLBACK(set_brightness), GINT_TO_POINTER(m));
+            g_signal_connect (G_OBJECT(plus_btn), "clicked", 
+                            G_CALLBACK(set_brightness), GINT_TO_POINTER(p));
+            /*g_signal_connect (G_OBJECT(undo_btn), "clicked", 
+                            G_CALLBACK(set_brightness), GINT_TO_POINTER(0));*/
+                            
+            frame_b = gtk_frame_new("Brightness");
+            gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
+            gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
 
-        gtk_widget_show(layout);
-        gtk_widget_show_all(window);
+            gtk_widget_show(layout);
+            gtk_widget_show_all(window);
+        }
     }
   /*  
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Saturation") == 0)  
@@ -87,7 +92,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         GtkWidget *frame_b;
         int p = 10;
         int m = -10;
-
         plus_btn = gtk_button_new_with_label("+10");
         minus_btn = gtk_button_new_with_label("-10");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -104,7 +108,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         frame_b = gtk_frame_new("Saturation");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
         gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
-
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
     }
@@ -120,7 +123,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         
         GtkWidget *plus_btn, *minus_btn, *undo_btn;
         GtkWidget *frame_b;
-
         plus_btn = gtk_button_new_with_label("+10");
         minus_btn = gtk_button_new_with_label("-10");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -137,7 +139,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         frame_b = gtk_frame_new("Contrast");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
         gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
-
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
     }
@@ -151,11 +152,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
           copy_bmp("../img/new.bmp","../img/old.bmp");
         }  
         if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item))){
-
           grayscale("../img/old.bmp","../img/new.bmp");
           show_image("../img/new.bmp");
         } else {
-
           show_image("../img/old.bmp");
         }
     }
@@ -172,7 +171,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         
         GtkWidget *plus_btn, *minus_btn, *undo_btn;
         GtkWidget *frame_b;
-
         plus_btn = gtk_button_new_with_label("+10");
         minus_btn = gtk_button_new_with_label("-10");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -189,7 +187,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         frame_b = gtk_frame_new("exclusive Grayscale");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
         gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
-
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
     }*/
@@ -246,44 +243,45 @@ static void show_image (char *file_path)
 /************************************^**********************************************************************************************************************************
 	UNDO / REDO / SAVE
 **********************************************************************************************************************************************************************/
-
-void save (char *new_image)
+char * index_path (int index_i)
 {
-  if (index_img == 0){
-    // Create a backup of the opened file
-    char output_path[256] = "";
-    char *index_string = "";
-    asprintf(&index_string, "%d", index_img);
-    memccpy(memccpy(memccpy(output_path, "../img/", '\0', 256) -1, index_string, '\0', 256) -1, ".bmp", '\0', 256);
-    copy_bmp(file_name,output_path);
-    manipulate_img = output_path;
-    index_img++;
-  } else {
-    // Save the new State of the image with the current index
-    char output_path[256] = "";
-    char *index_string = "";
-    asprintf(&index_string, "%d", index_img);
-    memccpy(memccpy(memccpy(output_path, "../img/", '\0', 256) -1, index_string, '\0', 256) -1, ".bmp", '\0', 256);
-    copy_bmp(new_image,output_path);
-    manipulate_img = output_path;
-    index_img++;
-  }
+    static char path[256] = "";
+    char *index_string;
+
+    asprintf(&index_string, "%d", index_i);
+    memccpy(memccpy(memccpy(path, "../img/", '\0', 256) -1, index_string, '\0', 256) -1, ".bmp", '\0', 256);
+
+    return (char*)path;
 }
 
-void undo (char *new_image)
+void save (char *new_image)
+{/*
+  if (current_index == 0){
+    // Create a backup of the opened file
+    copy_bmp(file_name, index_path(0));
+    current_index++;
+  } else {*/
+    // Save the new State of the image with the current index
+    copy_bmp(new_image,index_path(current_index));
+    current_index++;
+              printf("\n\n3\n%d\n\n\n",current_index);
+
+  //}
+}
+
+void undo ()
 {
-  if (IsDirty == true){
-    save (new_image);
-    index_img--;
-    IsDirty = false;
-  }
-  index_img--;
-  char output_path[256]; 
-  char *index_string = "";
-  asprintf(&index_string, "%d", index_img);
-  memccpy(memccpy(memccpy(output_path, "../img/", '\0', 256) -1, index_string, '\0', 256) -1, ".bmp", '\0', 256);    
-  show_image(output_path);
-  manipulate_img = output_path;
+    current_index--;
+
+    if (current_index >= 0){
+
+        show_image(index_path(current_index));
+        file_name = index_path(current_index);
+    } else {
+
+        show_image(original_file);
+        file_name = original_file;
+    }
 }
 
 void redo ()
@@ -298,8 +296,9 @@ void redo ()
 void set_brightness (GtkWidget* widget, gpointer data)
 {
   int value = GPOINTER_TO_INT(data);
-  brightness(manipulate_img, manipulate_img, value);
-  show_image(manipulate_img);
+  brightness(file_name, index_path(current_index), value);
+  file_name = index_path(current_index);
+  show_image(index_path(current_index));
 }
 /*
 void set_saturation (GtkWidget* widget, gpointer data)
@@ -307,7 +306,6 @@ void set_saturation (GtkWidget* widget, gpointer data)
   char *output_path = "../img/new.bmp";
   
   if (GPOINTER_TO_INT(data) == 0){                         // UNDO-action
-
     copy_bmp("../img/old.bmp","../img/new.bmp");
     show_image("../img/old.bmp");
   } else {
@@ -316,13 +314,11 @@ void set_saturation (GtkWidget* widget, gpointer data)
     show_image(output_path);
   }
 }
-
 void set_contrast (GtkWidget* widget, gpointer data)
 {
   char *output_path = "../img/new.bmp";
   int i = GPOINTER_TO_INT(data);
   current_float_value = ((current_float_value) + (i/100.0f));
-
   if (GPOINTER_TO_INT(data) == 0){                                              // UNDO
     current_float_value = 1.0;
     copy_bmp("../img/old.bmp","../img/new.bmp");
@@ -333,7 +329,6 @@ void set_contrast (GtkWidget* widget, gpointer data)
     show_image(output_path);
   }
 }
-
 void set_exclusive_grayscale (GtkWidget* widget, gpointer data)
 {
   char *output_path = "../img/new.bmp";
@@ -341,7 +336,6 @@ void set_exclusive_grayscale (GtkWidget* widget, gpointer data)
   current_int_value = (current_int_value + i);
   g_print("\n\n\n%d\n\n\n", current_int_value);
   if (GPOINTER_TO_INT(data) == 0){                         // UNDO-action
-
     current_int_value = 0;
     copy_bmp("../img/old.bmp","../img/new.bmp");
     show_image("../img/old.bmp");
@@ -351,7 +345,6 @@ void set_exclusive_grayscale (GtkWidget* widget, gpointer data)
     show_image(output_path);
   }
 }
-
 void set_grayscale (GtkWidget* menu_item, gpointer data)
 {
   if (manipulated == 0){
@@ -361,18 +354,14 @@ void set_grayscale (GtkWidget* menu_item, gpointer data)
   } else {
       copy_bmp("../img/new.bmp","../img/old.bmp");
   }  
-
   if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
-
       grayscale("../img/old.bmp","../img/new.bmp");
       show_image("../img/new.bmp");
   } else {
-
       g_print("\n\n\n\n Halllo \n\n\n\n\n\n");
       show_image("../img/old.bmp");
   }
 }
-
 void set_floyd_steinberg (GtkWidget* menu_item, gpointer data)
 {
   if (manipulated == 0){
@@ -383,18 +372,14 @@ void set_floyd_steinberg (GtkWidget* menu_item, gpointer data)
       //manipulated = ;
       //copy_bmp("../img/new.bmp","../img/old.bmp");
   }  
-
   if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
-
       floyd_steinberg("../img/old.bmp","../img/new.bmp");
       show_image("../img/new.bmp");
   } else {
-
       g_print("\n\n\n\n Halllo \n\n\n\n\n\n");
       show_image("../img/old.bmp");
   }
 }
-
 void set_color_seperation (GtkWidget* menu_item, gpointer data)
 {
   if (manipulated == 0){
@@ -404,18 +389,14 @@ void set_color_seperation (GtkWidget* menu_item, gpointer data)
   } else {
       //copy_bmp("../img/new.bmp","../img/old.bmp");
   }  
-
   if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
-
       color_seperation("../img/old.bmp","../img/new.bmp");
       show_image("../img/new.bmp");
   } else {
-
       g_print("\n\n\n\n Test \n\n\n\n\n\n");
       show_image("../img/old.bmp");
   }
 }
-
 void set_invert_colors (GtkWidget* menu_item, gpointer data)
 {
   if (manipulated == 0){
@@ -426,18 +407,14 @@ void set_invert_colors (GtkWidget* menu_item, gpointer data)
       //manipulated = ;
       //copy_bmp("../img/new.bmp","../img/old.bmp");
   }  
-
   if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
-
       invert_colors("../img/old.bmp","../img/new.bmp");
       show_image("../img/new.bmp");
   } else {
-
       g_print("\n\n\n\n Test \n\n\n\n\n\n");
       show_image("../img/old.bmp");
   }
 }
-
 void set_sepia (GtkWidget* menu_item, gpointer data)
 {
   if (manipulated == 0){
@@ -448,18 +425,14 @@ void set_sepia (GtkWidget* menu_item, gpointer data)
       //manipulated = ;
       //copy_bmp("../img/new.bmp","../img/old.bmp");
   }  
-
   if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
-
       sepia("../img/old.bmp","../img/new.bmp");
       show_image("../img/new.bmp");
   } else {
-
       g_print("\n\n\n\n Test \n\n\n\n\n\n");
       show_image("../img/old.bmp");
   }
 }
-
 void set_mirror_vert (GtkWidget* menu_item, gpointer data)
 {
   if (manipulated == 0){
@@ -470,18 +443,14 @@ void set_mirror_vert (GtkWidget* menu_item, gpointer data)
       //manipulated = ;
       //copy_bmp("../img/new.bmp","../img/old.bmp");
   }  
-
   if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
-
       mirror_vert("../img/old.bmp","../img/new.bmp");
       show_image("../img/new.bmp");
   } else {
-
       g_print("\n\n\n\n Test \n\n\n\n\n\n");
       show_image("../img/old.bmp");
   }
 }
-
 void set_mirror_hor (GtkWidget* menu_item, gpointer data)
 {
   if (manipulated == 0){
@@ -492,13 +461,10 @@ void set_mirror_hor (GtkWidget* menu_item, gpointer data)
       //manipulated = ;
       //copy_bmp("../img/new.bmp","../img/old.bmp");
   }  
-
   if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item)) == TRUE){
-
       mirror_hor("../img/old.bmp","../img/new.bmp");
       show_image("../img/new.bmp");
   } else {
-
       g_print("\n\n\n\n Test \n\n\n\n\n\n");
       show_image("../img/old.bmp");
   }
@@ -567,47 +533,37 @@ int main (int    argc, char **argv)
   menu_item = gtk_menu_item_new_with_label("Saturation");
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
-
   menu_item = gtk_menu_item_new_with_label("Contrast");
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
-
   menu_item = gtk_menu_item_new_with_label("exclusive Grayscale");
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
-
-
 // CheckMenuItems
   menu_item = gtk_check_menu_item_new_with_label("Grayscale");
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "toggle", G_CALLBACK(set_grayscale), NULL);
-
   menu_item = gtk_check_menu_item_new_with_mnemonic("Floyd Steinberg");
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(set_floyd_steinberg), NULL);
-
   menu_item = gtk_check_menu_item_new_with_mnemonic("Color Seperation");
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(set_color_seperation), NULL);
-
   menu_item = gtk_check_menu_item_new_with_mnemonic("Invert Colors");
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(set_invert_colors), NULL);
-
   menu_item = gtk_check_menu_item_new_with_mnemonic("Sepia");
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(set_sepia), NULL);
-
   menu_item = gtk_check_menu_item_new_with_mnemonic("Mirror (vertical)");
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(set_mirror_vert), NULL);
-
   menu_item = gtk_check_menu_item_new_with_mnemonic("Mirror (horizontal)");
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
   gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);

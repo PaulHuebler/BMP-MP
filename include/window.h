@@ -8,21 +8,23 @@ static GtkWidget *window;
 static GtkWidget *layout;
 
 char *file_name;
+char *original_file;
 // the image that should be manipulated
-char *manipulate_img;
+//char *manipulate_img;
 
 float current_float_value = 1.0;
 int current_int_value = 0;
 
 // for UNDO/ REDO function and  Save operation (current image state)
-int index_img = 0;   
-bool IsDirty = false;                
+int current_index = 0;   
+bool IsDirty = true;                
 
 // Funktionen zum Erstellen von Filechooserdialog und Imageabbildung
 GtkWidget * create_filechooser_dialog (char *init_path, GtkFileChooserAction action);
 static void show_image (char *file_path);
 
 // SAVE / UNDO / REDO
+char * index_path (int index_i);
 void save (char *new_image);
 void undo (char *new_image);
 void redo ();
