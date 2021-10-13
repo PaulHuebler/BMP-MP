@@ -22,16 +22,14 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Open") == 0)   
     {
-        fdialog = create_filechooser_dialog(file_name, GTK_FILE_CHOOSER_ACTION_OPEN);
+        fdialog = create_filechooser_dialog(original_file, GTK_FILE_CHOOSER_ACTION_OPEN);
         if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_OK) {
-          file_name = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fdialog));
-          g_print("%s\n", file_name);
-          gtk_image_new_from_file(file_name);
+          original_file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fdialog));
+          g_print("%s\n", original_file);
           gtk_widget_destroy(fdialog);
           current_index = 0;
-          //save(file_name);
-          original_file = file_name;
-          show_image(file_name);
+          current_file = original_file;
+          show_image(current_file);
         }
 /* TODO Bugfix: Cancel -> Window schleißen 
         if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_CANCEL) {
@@ -43,7 +41,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Brightness") == 0)  
     {
         if (IsDirty == false){
-          save ();
+          save ("");
+        } else {
+          save ("temp");
         }
         if (current_index < 0){
             printf("No image loaded!\n");
@@ -79,7 +79,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Saturation") == 0)  
     {   
         if (IsDirty == false){
-          save ();
+          save ("");
+        } else {
+          save ("temp");
         }
         if (current_index < 0){
             printf("No image loaded!\n");
@@ -253,33 +255,22 @@ char * index_path (int index_i)
     return (char*)path;
 }
 
-void save ()
+void save (char *temp)
 {
-  printf ("\n\n\n\nSAVING CURRENT IMAGE %d\n\n\n\n\n\n", current_index);
-  copy_bmp(file_name,index_path(current_index));
-  current_index++;
+  if (temp == "temp"){
+
+    printf ("\n\n\n\nSAVING CURRENT IMAGE %d\n\n\n\n\n\n", current_index);
+    copy_bmp(current_file, index_path(current_index));
+  } else {
+
+    copy_bmp(current_file, index_path(current_index));
+    current_index++;
+  }  
 }
 
 void undo ()
 { 
-  if (IsDirty == true){
-
-    save(file_name);
-    current_index--;
-    IsDirty = false;
-  } else {
-
-    //current_index--;
-    if (current_index >= 0){
-        show_image(index_path(current_index));
-        file_name = index_path(current_index);
-    } else {
-
-        current_index = 0;
-        file_name = index_path(current_index);
-        show_image(file_name);
-    }
-  }
+  
 }
 
 void redo ()
@@ -295,18 +286,17 @@ void set_brightness (GtkWidget* widget, gpointer data)
 {
   IsDirty = true;
   int value = GPOINTER_TO_INT(data);
-  brightness(file_name, index_path(current_index), value);
-  file_name = index_path(current_index);
-  show_image(index_path(current_index));
+  brightness(current_file, current_file, value); // 
+  
+  show_image(current_file);
 }
 
 void set_saturation (GtkWidget* widget, gpointer data)
 {
   IsDirty = true;
   int value = GPOINTER_TO_INT(data);
-  saturation(file_name, index_path(current_index), value);
-  file_name = index_path(current_index);
-  show_image(index_path(current_index));
+  saturation(current_file, current_file, value);
+  show_image(current_file);
 } /*
 void set_contrast (GtkWidget* widget, gpointer data)
 {

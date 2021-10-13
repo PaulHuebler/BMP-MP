@@ -8,7 +8,7 @@
 static GtkWidget *window;
 static GtkWidget *layout;
 
-char *file_name;
+char *current_file;
 static char *original_file;
 // the image that should be manipulated
 //char *manipulate_img;
@@ -26,7 +26,7 @@ static void show_image (char *file_path);
 
 // SAVE / UNDO / REDO
 char * index_path (int index_i);
-void save ();
+void save (char *temp);
 void undo ();
 void redo ();
 
