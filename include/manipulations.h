@@ -27,6 +27,12 @@ static int calc_gauss_pixel(int col, int row, int width, int height, char compon
 // Kopiert eine Bitmap mittels des Pixel-Arrays an einen neuen Speicherort (HSV)
 void copy_bmp(char input_path[], char output_path[]);
 
+// Gibt die Breite des Bildes in Pixel zurück.
+int get_width(char path[]);
+
+// Gibt die Höhe des Bildes in Pixel zurück.
+int get_height(char path[]);
+
 // Verändert die Helligkeit des Bildes (HSV) 
 void brightness(char input_path[], char output_path[], int value);
 

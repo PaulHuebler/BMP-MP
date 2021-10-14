@@ -29,6 +29,13 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
           gtk_widget_destroy(fdialog);
           current_index = 0;
           current_file = original_file;
+
+          int width = 500;
+          if ((get_width(current_file))+50 >= width) {
+            width = (get_width(current_file))+50;
+          }
+
+          gtk_window_resize(GTK_WINDOW(window), width, (get_height(current_file))+300);
           show_image(current_file);
         }
 /* TODO Bugfix: Cancel -> Window schleißen 
@@ -52,6 +59,12 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
             GtkWidget *plus_btn, *minus_btn, *undo_btn;
             GtkWidget *frame_b;
+
+            //gtk_widget_destroy(frame_b);
+            //gtk_widget_destroy(plus_btn);
+            //gtk_widget_destroy(minus_btn);
+            //gtk_widget_destroy(undo_btn);
+
             int p = 10;
             int m = -10;
 
@@ -230,8 +243,8 @@ GtkWidget * create_filechooser_dialog (char *init_path, GtkFileChooserAction act
 
 static void show_image (char *file_path)
 {
-  GtkWidget *image;
-  
+  gtk_widget_destroy(image);
+
   // show image
   image = gtk_image_new_from_file (file_path);
   gtk_layout_put(GTK_LAYOUT(layout), image, 20, 80);
@@ -284,6 +297,7 @@ void redo ()
 
 void set_brightness (GtkWidget* widget, gpointer data)
 {
+  
   IsDirty = true;
   int value = GPOINTER_TO_INT(data);
   brightness(current_file, current_file, value); // 
@@ -461,14 +475,14 @@ void set_mirror_hor (GtkWidget* menu_item, gpointer data)
 int main (int    argc, char **argv)
 {
   GtkWidget *menu_bar, *menu_item, *file_menu, *help_menu, *vbox, *save_button, *undo_button, *redo_button,
-            *tools_menu;
+            *tools_menu, *image;
 
   gtk_init(&argc, &argv);
 
 // Create Window:
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "BMP-MP");
-  gtk_window_set_default_size(GTK_WINDOW(window), 800, 800);
+  gtk_window_set_default_size(GTK_WINDOW(window), 500, 500);
   gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
   
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -477,6 +491,9 @@ int main (int    argc, char **argv)
   layout = gtk_layout_new(NULL, NULL);                                         
   gtk_container_add(GTK_CONTAINER (window), layout);
   gtk_widget_show(layout);
+
+  //image = gtk_image_new_from_file ("../img/test.bmp");
+  //gtk_layout_put(GTK_LAYOUT(layout), image, 20, 80);
 
 
 // Menubar: 
@@ -576,7 +593,6 @@ int main (int    argc, char **argv)
   g_signal_connect(G_OBJECT(undo_button), "clicked", G_CALLBACK(undo), NULL);
   g_signal_connect(G_OBJECT(redo_button), "clicked", G_CALLBACK(redo), NULL);
   g_signal_connect(G_OBJECT(save_button), "clicked", G_CALLBACK(save), NULL);
-
 
   gtk_widget_show_all(window);
 

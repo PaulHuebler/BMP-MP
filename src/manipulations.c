@@ -86,6 +86,22 @@ static void saveRGB(char path[]) {
 
 }
 
+int get_width(char path[]) {
+	
+	loadHSV(path);
+	free(hsv_pixels);
+	
+	return widthPx;
+}
+
+int get_height(char path[]) {
+	
+	loadHSV(path);
+	free(hsv_pixels);
+
+	return heightPx;
+}
+
 void brightness(char input_path[], char output_path[], int value)
 {
 

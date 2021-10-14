@@ -7,6 +7,7 @@
 
 static GtkWidget *window;
 static GtkWidget *layout;
+static GtkWidget *image;
 
 char *current_file;
 static char *original_file;
