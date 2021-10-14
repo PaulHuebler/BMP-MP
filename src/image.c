@@ -12,6 +12,9 @@
 #include "../include/manipulations.h"
 #include "../include/window.h"
 
+int width = 500;
+int height = 500;
+
 /**********************************************************************************************************************************************************************
 	Menubar/ show_image()/ filechooser 
 **********************************************************************************************************************************************************************/
@@ -30,10 +33,11 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
           current_index = 0;
           current_file = original_file;
 
-          int width = 500;
           if ((get_width(current_file))+50 >= width) {
             width = (get_width(current_file))+50;
           }
+
+          height = get_height(current_file);
 
           gtk_window_resize(GTK_WINDOW(window), width, (get_height(current_file))+300);
           show_image(current_file);
@@ -71,9 +75,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
             plus_btn = gtk_button_new_with_label("+10");
             minus_btn = gtk_button_new_with_label("-10");
             //undo_btn = gtk_button_new_with_label("UNDO");
-            gtk_layout_put(GTK_LAYOUT(layout), minus_btn, 100, 680);
-            gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, 680);
-            //gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, 680);
+            gtk_layout_put(GTK_LAYOUT(layout), minus_btn, 100, height+150);
+            gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, height+150);
+            //gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, height+150);
             g_signal_connect (G_OBJECT(minus_btn), "clicked", 
                             G_CALLBACK(set_brightness), GINT_TO_POINTER(m));
             g_signal_connect (G_OBJECT(plus_btn), "clicked", 
@@ -83,7 +87,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
                             
             frame_b = gtk_frame_new("Brightness");
             gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-            gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+            gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
 
             gtk_widget_show(layout);
             gtk_widget_show_all(window);
@@ -108,9 +112,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
             plus_btn = gtk_button_new_with_label("+10");
             minus_btn = gtk_button_new_with_label("-10");
             undo_btn = gtk_button_new_with_label("UNDO");
-            gtk_layout_put(GTK_LAYOUT(layout), minus_btn, 100, 680);
-            gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, 680);
-            gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, 680);
+            gtk_layout_put(GTK_LAYOUT(layout), minus_btn, 100, height+150);
+            gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, height+150);
+            gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, height+150);
             g_signal_connect (G_OBJECT(minus_btn), "clicked", 
                               G_CALLBACK(set_saturation), GINT_TO_POINTER(m));
             g_signal_connect (G_OBJECT(plus_btn), "clicked", 
@@ -120,7 +124,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
                               
             frame_b = gtk_frame_new("Saturation");
             gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-            gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+            gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
             gtk_widget_show(layout);
             gtk_widget_show_all(window);
         }
