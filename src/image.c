@@ -208,6 +208,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "About") == 0)
     {
         g_print("You pressed About\n");
+	gtk_show_uri_on_window(NULL, "https://github.com/PaulHuebler/BMP-MP", GDK_CURRENT_TIME, 0);
     } 
 }
 
