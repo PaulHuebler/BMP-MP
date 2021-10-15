@@ -12,8 +12,6 @@
 #include "../include/manipulations.h"
 #include "../include/window.h"
 
-int width = 500;
-int height = 500;
 
 /**********************************************************************************************************************************************************************
 	Menubar/ show_image()/ filechooser 
@@ -26,12 +24,14 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Open") == 0)   
     {
         fdialog = create_filechooser_dialog(original_file, GTK_FILE_CHOOSER_ACTION_OPEN);
+        
         if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_OK) {
           original_file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fdialog));
           g_print("%s\n", original_file);
           gtk_widget_destroy(fdialog);
           current_index = 0;
           current_file = original_file;
+          save();
 
           if ((get_width(current_file))+50 >= width) {
             width = (get_width(current_file))+50;
@@ -41,50 +41,40 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
           gtk_window_resize(GTK_WINDOW(window), width, (get_height(current_file))+300);
           show_image(current_file);
-        }
-/* TODO Bugfix: Cancel -> Window schleißen 
-        if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_CANCEL) {
-          gtk_widget_destroy(GTK_WIDGET(fdialog));
-        }
-        */
-           
+        }  else {
+          if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_CANCEL) {
+            gtk_widget_destroy(fdialog);
+          }
+        } 
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Brightness") == 0)  
     {
-        if (IsDirty == false){
-          save ("");
-        } else {
-          save ("temp");
-        }
+            IsDirty = true;
+
         if (current_index < 0){
             printf("No image loaded!\n");
-        } else {
-            
-
-            GtkWidget *plus_btn, *minus_btn, *undo_btn;
-            GtkWidget *frame_b;
-
-            //gtk_widget_destroy(frame_b);
-            //gtk_widget_destroy(plus_btn);
-            //gtk_widget_destroy(minus_btn);
-            //gtk_widget_destroy(undo_btn);
+        } else { 
+            gtk_widget_destroy(plus_btn);          
+            gtk_widget_destroy(minus_btn);            
+            gtk_widget_destroy(undo_btn);   
 
             int p = 10;
             int m = -10;
-
             plus_btn = gtk_button_new_with_label("+10");
             minus_btn = gtk_button_new_with_label("-10");
-            //undo_btn = gtk_button_new_with_label("UNDO");
+            undo_btn = gtk_button_new_with_label("UNDO");
             gtk_layout_put(GTK_LAYOUT(layout), minus_btn, 100, height+150);
             gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, height+150);
-            //gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, height+150);
+            gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, height+150);
             g_signal_connect (G_OBJECT(minus_btn), "clicked", 
                             G_CALLBACK(set_brightness), GINT_TO_POINTER(m));
             g_signal_connect (G_OBJECT(plus_btn), "clicked", 
                             G_CALLBACK(set_brightness), GINT_TO_POINTER(p));
-            /*g_signal_connect (G_OBJECT(undo_btn), "clicked", 
-                            G_CALLBACK(set_brightness), GINT_TO_POINTER(0));*/
-                            
+            g_signal_connect (G_OBJECT(undo_btn), "clicked", 
+                            G_CALLBACK(undo), NULL);
+
+            gtk_widget_destroy(frame_b);
+
             frame_b = gtk_frame_new("Brightness");
             gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
             gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
@@ -95,18 +85,14 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     } 
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Saturation") == 0)  
     {   
-        if (IsDirty == false){
-          save ("");
-        } else {
-          save ("temp");
-        }
-        if (current_index < 0){
-            printf("No image loaded!\n");
-        } else {  
-           
-
-            GtkWidget *plus_btn, *minus_btn, *undo_btn;
-            GtkWidget *frame_b;
+      IsDirty = true;
+      if (current_index < 0){
+          printf("No image loaded!\n");
+      } else { 
+            gtk_widget_destroy(plus_btn);          
+            gtk_widget_destroy(minus_btn);            
+            gtk_widget_destroy(undo_btn);            
+  
             int p = 10;
             int m = -10;
             plus_btn = gtk_button_new_with_label("+10");
@@ -121,10 +107,13 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
                               G_CALLBACK(set_saturation), GINT_TO_POINTER(p));
             g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                               G_CALLBACK(undo), NULL);
-                              
+
+            gtk_widget_destroy(frame_b);
+
             frame_b = gtk_frame_new("Saturation");
             gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
             gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
+
             gtk_widget_show(layout);
             gtk_widget_show_all(window);
         }
@@ -140,7 +129,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         }     
         
         GtkWidget *plus_btn, *minus_btn, *undo_btn;
-        GtkWidget *frame_b;
+        G
         plus_btn = gtk_button_new_with_label("+10");
         minus_btn = gtk_button_new_with_label("-10");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -153,7 +142,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
                           G_CALLBACK(set_contrast), GINT_TO_POINTER(5));
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(set_contrast), GINT_TO_POINTER(0));
-                          
+
+        gtk_widget_destroy(frame_b);
+
         frame_b = gtk_frame_new("Contrast");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
         gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
@@ -188,7 +179,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         g_print("You pressed exclusive Grayscale\n");
         
         GtkWidget *plus_btn, *minus_btn, *undo_btn;
-        GtkWidget *frame_b;
+
         plus_btn = gtk_button_new_with_label("+10");
         minus_btn = gtk_button_new_with_label("-10");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -201,7 +192,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
                           G_CALLBACK(set_exclusive_grayscale), GINT_TO_POINTER(10));
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(set_exclusive_grayscale), GINT_TO_POINTER(0));
-                          
+
+        gtk_widget_destroy(frame_b);
+
         frame_b = gtk_frame_new("exclusive Grayscale");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
         gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
@@ -245,17 +238,19 @@ GtkWidget * create_filechooser_dialog (char *init_path, GtkFileChooserAction act
   return fdialog;
 }
 
-static void show_image (char *file_path)
+void show_image (char *file_path)
 {
+      printf("\n\n\nShowImage:\n%s\n%d\n\n\n\n\n",current_file, current_index);
+
   gtk_widget_destroy(image);
 
   // show image
   image = gtk_image_new_from_file (file_path);
+
   gtk_layout_put(GTK_LAYOUT(layout), image, 20, 80);
 
   gtk_widget_show(layout);
   gtk_widget_show_all(window);
-
 }
 
 /************************************^**********************************************************************************************************************************
@@ -263,7 +258,7 @@ static void show_image (char *file_path)
 **********************************************************************************************************************************************************************/
 char * index_path (int index_i)
 {
-    static char path[256] = "";
+    static char path[256];
     char *index_string;
 
     asprintf(&index_string, "%d", index_i);
@@ -272,17 +267,15 @@ char * index_path (int index_i)
     return (char*)path;
 }
 
-void save (char *temp)
+void save ()
 {
-  if (temp == "temp"){
+  printf("\n\n\nCopy:\n%s\n%d\n\n\n\n\n",current_file, current_index);
+  copy_bmp(current_file, index_path(current_index));
+  current_file = index_path(current_index);
+  current_index += 1;
+  IsDirty = false;
+  printf("\n\n\nCopy2:\n%s\n%d\n\n\n\n\n",current_file, current_index);
 
-    printf ("\n\n\n\nSAVING CURRENT IMAGE %d\n\n\n\n\n\n", current_index);
-    copy_bmp(current_file, index_path(current_index));
-  } else {
-
-    copy_bmp(current_file, index_path(current_index));
-    current_index++;
-  }  
 }
 
 void undo ()
@@ -301,20 +294,20 @@ void redo ()
 
 void set_brightness (GtkWidget* widget, gpointer data)
 {
-  
-  IsDirty = true;
+  if (IsDirty == true){
+    save();
+  }
   int value = GPOINTER_TO_INT(data);
-  brightness(current_file, current_file, value); // 
-  
-  show_image(current_file);
+  //brightness();
 }
 
 void set_saturation (GtkWidget* widget, gpointer data)
 {
-  IsDirty = true;
+  if (IsDirty == true){
+    save();
+  }
   int value = GPOINTER_TO_INT(data);
-  saturation(current_file, current_file, value);
-  show_image(current_file);
+  //saturation();
 } /*
 void set_contrast (GtkWidget* widget, gpointer data)
 {
