@@ -54,9 +54,6 @@ void floyd_steinberg(char input_path[], char output_path[]);
 // Verringert die Anzahl der Farben, indem jedem Pixel eine Palettenfarbe zugewiesen wird (RGB)
 void color_seperation(char input_path[], char output_path[]);
 
-// Eine Palettenfarbe wird verstärkt (RGB)
-void color_enhancement(char input_path[], char output_path[], int color, float value);
-
 // Eine Farbe wird durch eine andere ersetzt (HSV)
 void colorswap(char input_path[], char output_path[], int old_color, int new_color, int tolerance);
 

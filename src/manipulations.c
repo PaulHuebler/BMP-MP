@@ -586,3 +586,31 @@ void temperature(char input_path[], char output_path[], float value) {
 
 	saveRGB(output_path);
 }
+
+void colorswap(char input_path[], char output_path[], int old_color, int new_color, int tolerance) {
+
+	loadHSV(input_path);
+
+	uint32_t count = heightPx * widthPx;
+
+		for (uint32_t x = 0; x < count; x++)
+		{
+
+			bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
+
+			if (abs(pix->h - old_color) <= tolerance) {
+
+				if (new_color + (pix->h - old_color) <= 0) { 
+					pix->h = 0;
+				}
+				else if (new_color + (pix->h - old_color) >= 255) {
+					pix->h = 255;
+				}
+				else {
+					pix->h = new_color + (pix->h - old_color);
+				}
+			}
+		}	
+
+	saveHSV(output_path);
+}
