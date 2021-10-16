@@ -67,7 +67,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         } else { 
             gtk_widget_destroy(plus_btn);          
             gtk_widget_destroy(minus_btn);            
-            gtk_widget_destroy(undo_btn);   
+            gtk_widget_destroy(undo_btn); 
+            gtk_widget_destroy(old_color_entry);
+            gtk_widget_destroy(new_color_entry);  
 
             int p = 10;
             int m = -10;
@@ -102,7 +104,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       } else { 
             gtk_widget_destroy(plus_btn);          
             gtk_widget_destroy(minus_btn);            
-            gtk_widget_destroy(undo_btn);            
+            gtk_widget_destroy(undo_btn);  
+            gtk_widget_destroy(old_color_entry);
+            gtk_widget_destroy(new_color_entry);          
   
             int p = 10;
             int m = -10;
@@ -138,6 +142,8 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_destroy(plus_btn);          
         gtk_widget_destroy(minus_btn);            
         gtk_widget_destroy(undo_btn); 
+        gtk_widget_destroy(old_color_entry);
+        gtk_widget_destroy(new_color_entry);
 
         plus_btn = gtk_button_new_with_label("+10");
         minus_btn = gtk_button_new_with_label("-10");
@@ -156,7 +162,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         frame_b = gtk_frame_new("Contrast");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
       }
@@ -170,6 +176,8 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_destroy(plus_btn);          
         gtk_widget_destroy(minus_btn);            
         gtk_widget_destroy(undo_btn);
+        gtk_widget_destroy(old_color_entry);
+        gtk_widget_destroy(new_color_entry);
 
         plus_btn = gtk_button_new_with_label("+10");
         minus_btn = gtk_button_new_with_label("-10");
@@ -188,7 +196,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         frame_b = gtk_frame_new("exclusive Grayscale");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
       }
@@ -202,6 +210,8 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_destroy(plus_btn);          
         gtk_widget_destroy(minus_btn);            
         gtk_widget_destroy(undo_btn); 
+        gtk_widget_destroy(old_color_entry);
+        gtk_widget_destroy(new_color_entry);
 
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -216,7 +226,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         frame_b = gtk_frame_new("Grayscale");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
       }
@@ -230,6 +240,8 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_destroy(plus_btn);          
         gtk_widget_destroy(minus_btn);            
         gtk_widget_destroy(undo_btn); 
+        gtk_widget_destroy(old_color_entry);
+        gtk_widget_destroy(new_color_entry);
 
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -244,7 +256,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         frame_b = gtk_frame_new("Floyd Steinberg");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
       }
@@ -258,6 +270,8 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_destroy(plus_btn);          
         gtk_widget_destroy(minus_btn);            
         gtk_widget_destroy(undo_btn); 
+        gtk_widget_destroy(old_color_entry);
+        gtk_widget_destroy(new_color_entry);
 
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -272,7 +286,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         frame_b = gtk_frame_new("Color Seperation");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
       }
@@ -286,6 +300,8 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_destroy(plus_btn);          
         gtk_widget_destroy(minus_btn);            
         gtk_widget_destroy(undo_btn); 
+        gtk_widget_destroy(old_color_entry);
+        gtk_widget_destroy(new_color_entry);
 
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -300,7 +316,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         frame_b = gtk_frame_new("Invert Colors");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
       }
@@ -314,6 +330,8 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_destroy(plus_btn);          
         gtk_widget_destroy(minus_btn);            
         gtk_widget_destroy(undo_btn); 
+        gtk_widget_destroy(old_color_entry);
+        gtk_widget_destroy(new_color_entry);
 
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -328,7 +346,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         frame_b = gtk_frame_new("Sepia");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
       }
@@ -342,6 +360,8 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_destroy(plus_btn);          
         gtk_widget_destroy(minus_btn);            
         gtk_widget_destroy(undo_btn); 
+        gtk_widget_destroy(old_color_entry);
+        gtk_widget_destroy(new_color_entry);
 
         plus_btn = gtk_button_new_with_label("APPLY vertical");
         minus_btn = gtk_button_new_with_label("APPLY horizontal");
@@ -360,7 +380,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         frame_b = gtk_frame_new("Mirror Image");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
       }
@@ -373,7 +393,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       } else {    
         gtk_widget_destroy(plus_btn);          
         gtk_widget_destroy(minus_btn);            
-        gtk_widget_destroy(undo_btn); 
+        gtk_widget_destroy(undo_btn);
+        gtk_widget_destroy(old_color_entry);
+        gtk_widget_destroy(new_color_entry); 
 
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -388,7 +410,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         frame_b = gtk_frame_new("Gaussian Blur 2D");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
       }
@@ -402,6 +424,8 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_destroy(plus_btn);          
         gtk_widget_destroy(minus_btn);            
         gtk_widget_destroy(undo_btn); 
+        gtk_widget_destroy(old_color_entry);
+        gtk_widget_destroy(new_color_entry);
 
         plus_btn = gtk_button_new_with_label("+10");
         minus_btn = gtk_button_new_with_label("-10");
@@ -420,7 +444,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         frame_b = gtk_frame_new("Temperature");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
       }
@@ -434,6 +458,15 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_destroy(plus_btn);          
         gtk_widget_destroy(minus_btn);            
         gtk_widget_destroy(undo_btn);
+        gtk_widget_destroy(old_color_entry);
+        gtk_widget_destroy(new_color_entry);
+        
+        old_color_entry = gtk_entry_new();
+        new_color_entry = gtk_entry_new();
+        gtk_entry_set_placeholder_text(GTK_ENTRY(old_color_entry), "old color");
+        gtk_entry_set_placeholder_text(GTK_ENTRY(new_color_entry), "new color");
+        gtk_layout_put(GTK_LAYOUT(layout), old_color_entry, 400, height+150);
+        gtk_layout_put(GTK_LAYOUT(layout), new_color_entry, 600, height+150);
 
         plus_btn = gtk_button_new_with_label("+10");
         minus_btn = gtk_button_new_with_label("-10");
@@ -450,9 +483,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         gtk_widget_destroy(frame_b);
 
-        frame_b = gtk_frame_new("exclusive Grayscale");
+        frame_b = gtk_frame_new("Color Swap\t\t\t\t\t\t\t\t\t\told color:\t\t\t\t\tnew color:\t\t\t\t");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
       }
@@ -466,6 +499,8 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_destroy(plus_btn);          
         gtk_widget_destroy(minus_btn);            
         gtk_widget_destroy(undo_btn); 
+        gtk_widget_destroy(old_color_entry);
+        gtk_widget_destroy(new_color_entry);
 
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -480,7 +515,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
 
         frame_b = gtk_frame_new("Sobel Edge Detection");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
-        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, 620);
+        gtk_layout_put(GTK_LAYOUT(layout), frame_b, 80, height+110);
         gtk_widget_show(layout);
         gtk_widget_show_all(window);
       }
@@ -699,9 +734,13 @@ void set_color_swap (GtkWidget* widget, gpointer data)
     save();
     manipulated = true;
   }
+  const gchar *num_old = gtk_entry_get_text (GTK_ENTRY(old_color_entry));
+  old_color = atoi(num_old);
+  const gchar *num_new = gtk_entry_get_text (GTK_ENTRY(new_color_entry));
+  new_color = atoi(num_new);
   int value = GPOINTER_TO_INT(data);
   current_int_value = (current_int_value + value);
-  colorswap(current_file, "../img/new.bmp", 100, 10,current_int_value);
+  colorswap(current_file, "../img/new.bmp", old_color, new_color, current_int_value);
   current_file = "../img/new.bmp";
   show_image("../img/new.bmp");
 }

@@ -10,6 +10,8 @@ static GtkWidget *layout;
 static GtkWidget *image;
 static GtkWidget *frame_b;
 static GtkWidget *plus_btn, *minus_btn, *undo_btn;
+static GtkWidget *old_color_entry, *new_color_entry;
+
 
 // start parameters for window
 int width = 500;
@@ -20,6 +22,8 @@ static char *original_file;
 
 float current_float_value = 1.0;
 int current_int_value = 0;
+gint old_color = 100;
+gint new_color = 100;
 
 // for UNDO/ REDO function and  Save operation (current image state)
 static int current_index = -1;   
