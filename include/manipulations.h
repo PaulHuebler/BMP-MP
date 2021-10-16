@@ -3,6 +3,7 @@
 
 bitmap_pixel_hsv_t* hsv_pixels;
 bitmap_pixel_rgb_t* rgb_pixels;
+bitmap_pixel_rgb_t* result;
 uint32_t widthPx, heightPx;
 bitmap_error_t error;
 
@@ -21,8 +22,11 @@ static void saveRGB(char path[]);
 // Findet den H-Wert (0-255), den die meisten Pixel im Bild besitzen (HSV)
 static int find_dominant_color();
 
-// Zum Berechnen der Einzelnen Pixel für den Gaussian Blur Filter (RGB)
+// Zum Berechnen der einzelnen Pixel für den Gaussian Blur Filter (RGB)
 static int calc_gauss_pixel(int col, int row, int width, int height, char component);
+
+// Zum Berechnen der Gradientenwerte für die Sobel Edge Detection
+static int calc_sobel (int Gx, int Gy);
 
 // Kopiert eine Bitmap mittels des Pixel-Arrays an einen neuen Speicherort (HSV)
 void copy_bmp(char input_path[], char output_path[]);
@@ -74,5 +78,8 @@ void gaussian_blur2D(char input_path[], char output_path[]);
 
 // Passt die Farbtemperatur des Bildes an (Naive Implementation). value sollte zwischen -1 und 1 liegen (RGB)
 void temperature(char input_path[], char output_path[], float value);
+
+// Gibt ein Schwarz/Weiß Bild zurück, in dem die Kanten hervorgehoben wurden (RGB)
+void sobel_edge_detection(char input_path[], char output_path[]);
 
 #endif

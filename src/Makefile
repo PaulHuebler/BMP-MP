@@ -1,6 +1,6 @@
 IDIR =../include
 CC=gcc
-CFLAGS=-I$(IDIR)
+CFLAGS = -I$(IDIR) -lm
 LDFLAGS = $(shell pkg-config --libs gtk+-3.0)
 PACKAGE = `pkg-config --cflags --libs gtk+-3.0`
 

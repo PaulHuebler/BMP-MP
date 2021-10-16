@@ -3,12 +3,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>
+#include <math.h>
 
 #include "../include/bitmap.h"
 #include "../include/manipulations.h"
 
 bitmap_pixel_hsv_t* hsv_pixels;
 bitmap_pixel_rgb_t* rgb_pixels;
+bitmap_pixel_rgb_t* result;
 uint32_t widthPx, heightPx;
 bitmap_error_t error;
 
@@ -512,7 +514,8 @@ void gaussian_blur2D(char input_path[], char output_path[]) {
 	int width = (int)widthPx;
 	int height = (int)heightPx; 
 
-	bitmap_pixel_rgb_t* result = rgb_pixels;
+	error = bitmapReadPixels(input_path, (bitmap_pixel_t**)&result, &widthPx, &heightPx, BITMAP_COLOR_SPACE_RGB);
+	assert(error == BITMAP_ERROR_SUCCESS);
 
     for (int row = 0; row < height; row++) {
 
@@ -613,4 +616,88 @@ void colorswap(char input_path[], char output_path[], int old_color, int new_col
 		}	
 
 	saveHSV(output_path);
+}
+
+static int calc_sobel (int Gx, int Gy) {
+
+    int x = sqrt(Gx*Gx + Gy*Gy);
+
+    if (x > 255) {
+        x = 255;
+    }
+
+    return x;
+}
+
+void sobel_edge_detection(char input_path[], char output_path[]) {
+
+	loadRGB(input_path);
+
+	error = bitmapReadPixels(input_path, (bitmap_pixel_t**)&result, &widthPx, &heightPx, BITMAP_COLOR_SPACE_RGB);
+	assert(error == BITMAP_ERROR_SUCCESS);
+
+	uint32_t count = heightPx * widthPx;
+
+	//Konvertierung in Graustufen
+	for (uint32_t x = 0; x < count; x++) {
+
+		bitmap_pixel_rgb_t* pix = &rgb_pixels[x];
+		int value = (pix->r + pix->g + pix->b) / 3;
+		pix->r = pix->g = pix->b = value;
+	}	
+
+	int height = heightPx;
+	int width = widthPx;
+
+	int Gx[3][3] = {{-1, 0, 1}, 
+					{-2, 0, 2}, 
+					{-1, 0, 1}};
+
+	int Gy[3][3] = {{-1, -2, -1}, 
+					{0, 0, 0}, 
+					{1, 2, 1}};
+
+	for (int i = 0; i < height; i++) {
+
+		for (int j = 0; j < width; j++) {
+
+			int Gx_v = 0;
+			int Gy_v = 0;
+
+			for (int x = -1; x < 2; x++) {
+
+				for (int y = -1; y < 2; y++) {
+					
+					//Check, ob die Pixel ausserhalb des Bildes liegen
+					if (i + x < height && i + x > 0 && j + y < width && j + y > 0) {
+
+						bitmap_pixel_rgb_t* pix = &rgb_pixels[(i + x) * width + j + y];
+
+						//Anwenden der Sobel-Operatoren
+						Gx_v += pix->r * Gx[x+1][y+1];
+						Gy_v += pix->r * Gy[x+1][y+1];
+
+					}
+				}
+			}
+
+			bitmap_pixel_rgb_t* pix = &result[i * width + j];
+
+			//Speichern der ermittelten Gradientenwerte
+			pix->r = pix->g = pix->b = calc_sobel(Gx_v, Gy_v);
+		}
+	}
+
+	//Kopieren vom temporären ins finale Pixelarray
+	for (uint32_t x = 0; x < count; x++) {
+
+		bitmap_pixel_rgb_t* pix1 = &rgb_pixels[x];
+		bitmap_pixel_rgb_t* pix2 = &result[x];
+
+		*pix1 = *pix2;
+	}	
+
+	free(result);
+
+	saveRGB(output_path);
 }
