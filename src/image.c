@@ -529,6 +529,8 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Exit") == 0)  
     {
+        remove("../img/old.bmp");
+        remove("../img/new.bmp");
         gtk_main_quit(); //quit the application
     }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "About") == 0)
@@ -778,8 +780,12 @@ int main (int    argc, char **argv)
   gtk_window_set_default_size(GTK_WINDOW(window), 500, 500);
   gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
   
+  /* TODO:
+  g_signal_connect(window, "destroy", G_CALLBACK(remove), "../img/old.bmp");
+  g_signal_connect(window, "destroy", G_CALLBACK(remove), "../img/new.bmp"); */
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
   
+
 // layoutcontainer 
   layout = gtk_layout_new(NULL, NULL);                                         
   gtk_container_add(GTK_CONTAINER (window), layout);
