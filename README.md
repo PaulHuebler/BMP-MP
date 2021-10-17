@@ -7,7 +7,8 @@ Dieses Projekt entstand im Rahmen des Multimedia-Moduls der TU Freiberg im Somme
 
 ### Installation
 
-Nach dem Download der Dateien navigieren Sie in den Ordner `src/` und führen dort mit dem Befehl `make` das Makefile aus. Nun können Sie mit `./bmp-mp` das Programm starten.
+Nach dem Download der Dateien und Installation der GTK3-Pakete navigieren Sie in den Ordner `src/` und führen dort mit dem Befehl `make` das Makefile aus. Nun können Sie mit `./bmp-mp` das Programm starten.
+Das Programm ist plattformunabhängig verwendbar.
 
 ### Laden und Speichern eines Bildes
 
