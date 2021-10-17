@@ -152,9 +152,9 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, height+150);
         gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, height+150);
         g_signal_connect (G_OBJECT(minus_btn), "clicked", 
-                          G_CALLBACK(set_contrast), GINT_TO_POINTER(-5));
+                          G_CALLBACK(set_contrast), GINT_TO_POINTER(-10));
         g_signal_connect (G_OBJECT(plus_btn), "clicked", 
-                          G_CALLBACK(set_contrast), GINT_TO_POINTER(5));
+                          G_CALLBACK(set_contrast), GINT_TO_POINTER(10));
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
@@ -624,8 +624,8 @@ void set_contrast (GtkWidget* widget, gpointer data)
     manipulated = true;
   }
   int value = GPOINTER_TO_INT(data);
-  current_float_value = ((current_float_value) + (value/100.0f));
-  contrast(current_file, "../img/new.bmp", current_float_value);
+  //current_float_value = ((current_float_value) + (value/100.0f));
+  contrast(current_file, "../img/new.bmp", value);
   current_file = "../img/new.bmp";
   show_image("../img/new.bmp");
 }

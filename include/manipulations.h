@@ -44,7 +44,7 @@ void brightness(char input_path[], char output_path[], int value);
 void saturation(char input_path[], char output_path[], int value);
 
 // Verändert den Kontrast des Bildes (RGB)
-void contrast(char input_path[], char output_path[], float value);
+void contrast(char input_path[], char output_path[], int value);
 
 // Stellt das Bild in Graustufen dar (HSV) 
 void grayscale(char input_path[], char output_path[]);
@@ -77,7 +77,7 @@ void mirror_hor(char input_path[], char output_path[]);
 void gaussian_blur2D(char input_path[], char output_path[]);
 
 // Passt die Farbtemperatur des Bildes an (Naive Implementation). value sollte zwischen -1 und 1 liegen (RGB)
-void temperature(char input_path[], char output_path[], float value);
+void temperature(char input_path[], char output_path[], int value);
 
 // Gibt ein Schwarz/Weiß Bild zurück, in dem die Kanten hervorgehoben wurden (RGB)
 void sobel_edge_detection(char input_path[], char output_path[]);

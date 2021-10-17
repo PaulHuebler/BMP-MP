@@ -14,22 +14,6 @@ bitmap_pixel_rgb_t* result;
 uint32_t widthPx, heightPx;
 bitmap_error_t error;
 
-bitmap_pixel_rgb_t PAL[] =
-{
-	{ .r = 0x00, .g = 0x00, .b = 0x00 }, // Black
-	{ .r = 0xFF, .g = 0x00, .b = 0x00 }, // Red
-	{ .r = 0x00, .g = 0xFF, .b = 0x00 }, // Green
-	{ .r = 0x00, .g = 0x00, .b = 0xFF }, // Blue
-	{ .r = 0xFF, .g = 0xFF, .b = 0x00 }, // Yellow
-	{ .r = 0xFF, .g = 0x00, .b = 0xFF }, // Pink
-	{ .r = 0x00, .g = 0xFF, .b = 0xFF }, // Cyan
-	{ .r = 0xFF, .g = 0xFF, .b = 0xFF }  // White
-};
-
-int kernel[3][3] = { 1, 2, 1,
-                   2, 4, 2,
-                   1, 2, 1 };
-
 static void loadHSV(char path[]) {
 
 	error = bitmapReadPixels(path, (bitmap_pixel_t**)&hsv_pixels, &widthPx, &heightPx, BITMAP_COLOR_SPACE_HSV);
@@ -104,14 +88,12 @@ int get_height(char path[]) {
 	return heightPx;
 }
 
-void brightness(char input_path[], char output_path[], int value)
-{
+void brightness(char input_path[], char output_path[], int value) {
 
 	loadHSV(input_path);
 	uint32_t count = heightPx * widthPx;
 
-		for (uint32_t x = 0; x < count; x++)
-		{
+		for (uint32_t x = 0; x < count; x++) {
 
 			bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
 
@@ -129,13 +111,12 @@ void brightness(char input_path[], char output_path[], int value)
 	saveHSV(output_path);
 }
 
-void saturation(char input_path[], char output_path[], int value)
-{
+void saturation(char input_path[], char output_path[], int value) {
+
 	loadHSV(input_path);
 	uint32_t count = heightPx * widthPx;
 
-		for (uint32_t x = 0; x < count; x++)
-		{
+		for (uint32_t x = 0; x < count; x++) {
 
 			bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
 
@@ -153,49 +134,58 @@ void saturation(char input_path[], char output_path[], int value)
 	saveHSV(output_path);
 }
 
-void contrast(char input_path[], char output_path[], float value) 
-{
-	loadRGB(input_path);
+void contrast(char input_path[], char output_path[], int value) {
+
+	loadHSV(input_path);
 
 	uint32_t count = heightPx * widthPx;
 
-		for (uint32_t x = 0; x < count; x++)
-		{
+	long brightness = 0;
 
-			bitmap_pixel_rgb_t* pix = &rgb_pixels[x];
+	// Ermitteln des durchschnittlichen Helligkeitswerts des Bildes
+	for (uint32_t x = 0; x < count; x++) {
 
-			if ((pix->r * value) > 255) {
-				pix->r = 255;
-			} 
-			else if ((pix->r * value) < 0) {
-				pix->r = 0;
+		bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
+		brightness += pix->v;
+	}	
+
+	brightness = brightness / count;
+
+	// Ändern der Helligkeitswerte jedes Pixels abhängig von seinem Verhältnis zur durchschn. Helligkeit
+	for (uint32_t x = 0; x < count; x++) {
+
+		bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
+
+		float divisor1 = (float)pix->v / (float)brightness;
+		float divisor2 = (float)brightness / (float)pix->v;
+		
+		if (divisor1 - 1 >= 0) {
+
+			if (pix->v + (divisor1 - 1) * value >= 255) {
+				pix->v = 255;
+			}
+			else if (pix->v + (divisor1 - 1) * value <= 0) {
+				pix->v = 0;
 			}
 			else {
-				pix->r = (pix->r * value);
+				pix->v += (divisor1 - 1) * value;
 			}
+		}
+		else {
 
-			if ((pix->g * value) > 255) {
-				pix->g = 255;
-			} 
-			else if ((pix->g * value) < 0) {
-				pix->g = 0;
+			if (pix->v - (divisor2 - 1) * value >= 255) {
+				pix->v = 255;
+			}
+			else if (pix->v - (divisor2 - 1) * value <= 0) {
+				pix->v = 0;
 			}
 			else {
-				pix->g = (pix->g * value);
+				pix->v -= (divisor2 - 1) * value;
 			}
+		}
+	}	
 
-			if ((pix->b * value) > 255) {
-				pix->b = 255;
-			} 
-			else if ((pix->b * value) < 0) {
-				pix->b = 0;
-			}
-			else {
-				pix->b = (pix->b * value);
-			}
-		}	
-
-	saveRGB(output_path);
+	saveHSV(output_path);
 }
 
 void grayscale(char input_path[], char output_path[]) {
@@ -203,8 +193,7 @@ void grayscale(char input_path[], char output_path[]) {
 	loadHSV(input_path);
 	uint32_t count = heightPx * widthPx;
 
-		for (uint32_t x = 0; x < count; x++)
-		{
+		for (uint32_t x = 0; x < count; x++) {
 
 			bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
 
@@ -241,7 +230,6 @@ static int find_dominant_color() {
 	}
 
 	return dominant_color;
-
 }
 
 void exclusive_grayscale(char input_path[], char output_path[], int tolerance) {
@@ -251,32 +239,41 @@ void exclusive_grayscale(char input_path[], char output_path[], int tolerance) {
 
 	printf("Dominante Farbe: %d\n", dominant_color);
 
-		for (uint32_t x = 0; x < count; x++)
-		{
+		for (uint32_t x = 0; x < count; x++) {
 
 			bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
 
-			if (abs(pix->h - dominant_color) >= tolerance) {
+			if (abs(pix->h - dominant_color) >= tolerance)
 				pix->s = 0;
-			}
 		}	
 }
 
 // Select the color from the palette that exhibits the minimum Euclidean distance to the given pixel.
 static bitmap_pixel_rgb_t select_from_pal(bitmap_pixel_rgb_t pix) {
 
+	bitmap_pixel_rgb_t PAL[] = {	
+		{ .r = 0x00, .g = 0x00, .b = 0x00 }, // Black
+		{ .r = 0xFF, .g = 0x00, .b = 0x00 }, // Red
+		{ .r = 0x00, .g = 0xFF, .b = 0x00 }, // Green
+		{ .r = 0x00, .g = 0x00, .b = 0xFF }, // Blue
+		{ .r = 0xFF, .g = 0xFF, .b = 0x00 }, // Yellow
+		{ .r = 0xFF, .g = 0x00, .b = 0xFF }, // Pink
+		{ .r = 0x00, .g = 0xFF, .b = 0xFF }, // Cyan
+		{ .r = 0xFF, .g = 0xFF, .b = 0xFF }  // White
+	};
+
 	int dist = INT_MAX;
 	bitmap_pixel_rgb_t pal;
 
-	for (size_t i = 0; i < (sizeof(PAL) / sizeof(*PAL)); i++)
-	{
+	for (size_t i = 0; i < (sizeof(PAL) / sizeof(*PAL)); i++) {
+
 		bitmap_pixel_rgb_t new_pal = PAL[i];
 
 		int dr = new_pal.r - pix.r, dg = new_pal.g - pix.g, db = new_pal.b - pix.b;
 		int new_dist = (dr * dr) + (dg * dg) + (db * db);
 
-		if (new_dist < dist)
-		{
+		if (new_dist < dist) {
+
 			dist = new_dist;
 			pal = PAL[i];
 		}
@@ -294,8 +291,8 @@ static void apply_quant_err_comp(bitmap_component_t* c, int qe, int fac) {
 
 static void apply_quant_err(bitmap_pixel_rgb_t* pixels, uint32_t width, uint32_t height, uint32_t x, uint32_t y, const int* qe, int fac) {
 
-	if ((x < width) && (y < height))
-	{
+	if ((x < width) && (y < height)) {
+
 		bitmap_pixel_rgb_t* pix = &pixels[(width * y) + x];
 
 		apply_quant_err_comp(&pix->r, qe[0], fac);
@@ -306,13 +303,12 @@ static void apply_quant_err(bitmap_pixel_rgb_t* pixels, uint32_t width, uint32_t
 
 void floyd_steinberg(char input_path[], char output_path[]) {
 
-
 	loadRGB(input_path);
 
-	for (uint32_t y = 0; y < heightPx; y++)
-	{
-		for (uint32_t x = 0; x < widthPx; x++)
-		{
+	for (uint32_t y = 0; y < heightPx; y++) {
+
+		for (uint32_t x = 0; x < widthPx; x++) {
+
 			// Get a pointer to the pixel and select a palette color for it.
 			bitmap_pixel_rgb_t* pix = &rgb_pixels[(widthPx * y) + x];
 			bitmap_pixel_rgb_t pal = select_from_pal(*pix);
@@ -334,17 +330,16 @@ void floyd_steinberg(char input_path[], char output_path[]) {
 	}
 
 	saveRGB(output_path);
-
 }
 
 void color_seperation(char input_path[], char output_path[]) {
 
 	loadRGB(input_path);
 
-	for (uint32_t y = 0; y < heightPx; y++)
-	{
-		for (uint32_t x = 0; x < widthPx; x++)
-		{
+	for (uint32_t y = 0; y < heightPx; y++) {
+
+		for (uint32_t x = 0; x < widthPx; x++) {
+
 			// Get a pointer to the pixel and select a palette color for it.
 			bitmap_pixel_rgb_t* pix = &rgb_pixels[(widthPx * y) + x];
 			bitmap_pixel_rgb_t pal = select_from_pal(*pix);
@@ -381,41 +376,38 @@ void sepia(char input_path[], char output_path[]) {
 
 	uint32_t count = heightPx * widthPx;
 
-	for (uint32_t x = 0; x < count; x++)
-		{
+	for (uint32_t x = 0; x < count; x++) {
 
-			bitmap_pixel_rgb_t* pix = &rgb_pixels[x];
+		bitmap_pixel_rgb_t* pix = &rgb_pixels[x];
 
-			// Calculations: https://www.techrepublic.com/blog/how-do-i/how-do-i-convert-images-to-grayscale-and-sepia-tone-using-c/
-			int output_r = (pix->r * 0.393 + pix->g * 0.769 + pix->b * 0.189);
-			int output_g = (pix->r * 0.349 + pix->g * 0.686 + pix->b * 0.168);
-			int output_b = (pix->r * 0.272 + pix->g * 0.534 + pix->b * 0.131);
+		// Calculations: https://www.techrepublic.com/blog/how-do-i/how-do-i-convert-images-to-grayscale-and-sepia-tone-using-c/
+		int output_r = (pix->r * 0.393 + pix->g * 0.769 + pix->b * 0.189);
+		int output_g = (pix->r * 0.349 + pix->g * 0.686 + pix->b * 0.168);
+		int output_b = (pix->r * 0.272 + pix->g * 0.534 + pix->b * 0.131);
 
-			if (output_r > 255) {
-				pix->r = 255;
-			} 
-			else {
-				pix->r = output_r;
-			}
-
-			if (output_g > 255) {
-				pix->g = 255;
-			} 
-			else {
-				pix->g = output_g;
-			}
-
-			if (output_b > 255) {
-				pix->b = 255;
-			} 
-			else {
-				pix->b = output_b;
-			}
-			
+		if (output_r > 255) {
+			pix->r = 255;
+		} 
+		else {
+			pix->r = output_r;
 		}
 
-	saveRGB(output_path);
+		if (output_g > 255) {
+			pix->g = 255;
+		} 
+		else {
+			pix->g = output_g;
+		}
 
+		if (output_b > 255) {
+			pix->b = 255;
+		} 
+		else {
+			pix->b = output_b;
+		}		
+	}
+
+	saveRGB(output_path);
 }
 
 void mirror_vert(char input_path[], char output_path[]) {
@@ -427,7 +419,8 @@ void mirror_vert(char input_path[], char output_path[]) {
 			
 			// läuft die "Spalten" ab
 			for (uint32_t y = 0; y < widthPx/2; y++) {
-
+				
+				// Vertauscht die gegenüberliegenden Pixel
 				bitmap_pixel_rgb_t* pix1 = &rgb_pixels[x*widthPx + y];
 				bitmap_pixel_rgb_t* pix2 = &rgb_pixels[x*widthPx + widthPx - y - 1];
 				bitmap_pixel_rgb_t* temp = &rgb_pixels[0];
@@ -449,7 +442,8 @@ void mirror_hor(char input_path[], char output_path[]) {
 			
 			// läuft die "Zeilen" ab
 			for (uint32_t y = 0; y < heightPx/2; y++) {
-
+				
+				// Vertauscht die gegenüberliegenden Pixel
 				bitmap_pixel_rgb_t* pix1 = &rgb_pixels[y*widthPx + x];
 				bitmap_pixel_rgb_t* pix2 = &rgb_pixels[(heightPx - y - 1)*widthPx + x];
 				bitmap_pixel_rgb_t* temp = &rgb_pixels[0];
@@ -465,11 +459,14 @@ void mirror_hor(char input_path[], char output_path[]) {
 // Grundlagen wurden aus diesem Eintrag entnommen und angepasst: https://stackoverflow.com/questions/42186498/gaussian-blur-image-processing-c
 static int calc_gauss_pixel(int col, int row, int width, int height, char component) {
 
+	int kernel[3][3] = { 1, 2, 1,
+                   		2, 4, 2,
+                   		1, 2, 1 };
+
     int sum = 0;
     int divisor = 0;
 	int color = 0;
 	
-
     for (int j = -1; j <= 1; j++) {
 
         for (int i = -1; i <= 1; i++) {
@@ -498,13 +495,11 @@ static int calc_gauss_pixel(int col, int row, int width, int height, char compon
 
                 sum += (int)(color * kernel[i + 1][j + 1]);
                 divisor += kernel[i + 1][j + 1];
-				
             }
         }
     }
 
     return (int)(sum / divisor);
-
 }
 
 void gaussian_blur2D(char input_path[], char output_path[]) {
@@ -521,12 +516,11 @@ void gaussian_blur2D(char input_path[], char output_path[]) {
 
         for (int col = 0; col < width; col++) {
            
-			bitmap_pixel_rgb_t* pix = &result[row * width + col ];
+			bitmap_pixel_rgb_t* pix = &result[row * width + col];
 				
             pix->r = calc_gauss_pixel(col, row, width, height, 'r');
 			pix->g = calc_gauss_pixel(col, row, width, height, 'g');
-			pix->b = calc_gauss_pixel(col, row, width, height, 'b');
-            
+			pix->b = calc_gauss_pixel(col, row, width, height, 'b');  
         }
     }
 
@@ -544,7 +538,7 @@ void gaussian_blur2D(char input_path[], char output_path[]) {
 	saveRGB(output_path);
 }
 
-void temperature(char input_path[], char output_path[], float value) {
+void temperature(char input_path[], char output_path[], int value) {
 
 	loadRGB(input_path);
 
@@ -556,34 +550,34 @@ void temperature(char input_path[], char output_path[], float value) {
 
 			bitmap_pixel_rgb_t* pix = &rgb_pixels[x];
 
-			if (pix->r + pix->r * value >= 255) {
+			if (pix->r + value >= 255) {
 				pix->r = 255;
 			} 
-			else if (pix->r + pix->r * value < 0) {
+			else if (pix->r + value < 0) {
 				pix->r = 0;
 			} 
 			else {
-				pix->r += pix->r * value;
+				pix->r += value;
 			}
 
-			if (pix->g + pix->g * value >= 255) {
+			if (pix->g + value >= 255) {
 				pix->g = 255;
 			} 
-			else if (pix->g + pix->g * value < 0) {
+			else if (pix->g + value < 0) {
 				pix->g = 0;
 			} 
 			else {
-				pix->g += pix->g * value;
+				pix->g += value;
 			}
 
-			if (pix->b - pix->b * value <= 0) {
+			if (pix->b - value <= 0) {
 				pix->b = 0;
 			} 
-			else if (pix->b - pix->b * value > 255) {
+			else if (pix->b - value > 255) {
 				pix->b = 255;
 			} 
 			else {
-				pix->b -= pix->b * value;
+				pix->b -= value;
 			}
 		}	
 
@@ -596,8 +590,7 @@ void colorswap(char input_path[], char output_path[], int old_color, int new_col
 
 	uint32_t count = heightPx * widthPx;
 
-		for (uint32_t x = 0; x < count; x++)
-		{
+		for (uint32_t x = 0; x < count; x++) {
 
 			bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
 
@@ -622,9 +615,8 @@ static int calc_sobel (int Gx, int Gy) {
 
     int x = sqrt(Gx*Gx + Gy*Gy);
 
-    if (x > 255) {
-        x = 255;
-    }
+    if (x > 255)
+    	x = 255;
 
     return x;
 }
@@ -638,7 +630,7 @@ void sobel_edge_detection(char input_path[], char output_path[]) {
 
 	uint32_t count = heightPx * widthPx;
 
-	//Konvertierung in Graustufen
+	//Konvertierung in Graustufen (RGB)
 	for (uint32_t x = 0; x < count; x++) {
 
 		bitmap_pixel_rgb_t* pix = &rgb_pixels[x];
@@ -649,6 +641,7 @@ void sobel_edge_detection(char input_path[], char output_path[]) {
 	int height = heightPx;
 	int width = widthPx;
 
+	// Gradienten-Kernel in x- und y-Richtung
 	int Gx[3][3] = {{-1, 0, 1}, 
 					{-2, 0, 2}, 
 					{-1, 0, 1}};
