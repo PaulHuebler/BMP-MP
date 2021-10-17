@@ -761,7 +761,7 @@ void set_sobel_edge_detection (GtkWidget* menu_item, gpointer data)
 int main (int    argc, char **argv)
 {
   GtkWidget *menu_bar, *menu_item, *file_menu, *help_menu, *save_button, *undo_button, *redo_button,
-            *tools_menu, *image;
+            *corrections_menu, *effects_menu, *transform_menu, *image;
 
   gtk_init(&argc, &argv);
 
@@ -782,7 +782,9 @@ int main (int    argc, char **argv)
   menu_bar = gtk_menu_bar_new();
 
   file_menu = gtk_menu_new();
-  tools_menu = gtk_menu_new();
+  corrections_menu = gtk_menu_new();
+  effects_menu = gtk_menu_new();
+  transform_menu = gtk_menu_new();
   help_menu = gtk_menu_new();
   
   menu_item = gtk_menu_item_new_with_label("File");
@@ -809,66 +811,72 @@ int main (int    argc, char **argv)
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
-  menu_item = gtk_menu_item_new_with_label("Tools");
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item), tools_menu);
+  menu_item = gtk_menu_item_new_with_label("Corrections");
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item), corrections_menu);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
+
+  menu_item = gtk_menu_item_new_with_label("Effects");
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item), effects_menu);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
+
+  menu_item = gtk_menu_item_new_with_label("Transformations");
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item), transform_menu);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
 
   menu_item = gtk_menu_item_new_with_label("Brightness");
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(corrections_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   menu_item = gtk_menu_item_new_with_label("Saturation");
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(corrections_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
   
   menu_item = gtk_menu_item_new_with_label("Contrast");
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(corrections_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   menu_item = gtk_menu_item_new_with_label("exclusive Grayscale");
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(effects_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   menu_item = gtk_menu_item_new_with_label("Grayscale");
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(effects_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   menu_item = gtk_menu_item_new_with_label("Floyd Steinberg");
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(effects_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
-  menu_item = gtk_check_menu_item_new_with_label("Color Seperation");
-  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  menu_item = gtk_menu_item_new_with_label("Color Seperation");
+  gtk_menu_shell_append(GTK_MENU_SHELL(effects_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   menu_item = gtk_menu_item_new_with_label("Invert Colors");
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(effects_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   menu_item = gtk_menu_item_new_with_label("Sepia");
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(effects_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   menu_item = gtk_menu_item_new_with_label("Mirror");
-  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), FALSE);
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(transform_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   menu_item = gtk_menu_item_new_with_label("Gaussian Blur 2D");
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(effects_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   menu_item = gtk_menu_item_new_with_label("Temperature");
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(corrections_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   menu_item = gtk_menu_item_new_with_label("Color Swap");
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(corrections_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
   menu_item = gtk_menu_item_new_with_label("Sobel Edge Detection");
-  gtk_menu_shell_append(GTK_MENU_SHELL(tools_menu), menu_item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(effects_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
 
 
