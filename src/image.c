@@ -463,21 +463,21 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         
         old_color_entry = gtk_entry_new();
         new_color_entry = gtk_entry_new();
+        plus_btn = gtk_entry_new();
         gtk_entry_set_placeholder_text(GTK_ENTRY(old_color_entry), "old color");
         gtk_entry_set_placeholder_text(GTK_ENTRY(new_color_entry), "new color");
+        gtk_entry_set_placeholder_text(GTK_ENTRY(plus_btn), "Tolerance");
         gtk_layout_put(GTK_LAYOUT(layout), old_color_entry, 400, height+150);
         gtk_layout_put(GTK_LAYOUT(layout), new_color_entry, 600, height+150);
+        gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, height+150);
 
-        plus_btn = gtk_button_new_with_label("+10");
-        minus_btn = gtk_button_new_with_label("-10");
+
+        minus_btn = gtk_button_new_with_label("Apply");
         undo_btn = gtk_button_new_with_label("UNDO");
         gtk_layout_put(GTK_LAYOUT(layout), minus_btn, 100, height+150);
-        gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, height+150);
-        gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, height+150);
+        gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 100, height+200);
         g_signal_connect (G_OBJECT(minus_btn), "clicked", 
-                          G_CALLBACK(set_color_swap), GINT_TO_POINTER(-10));
-        g_signal_connect (G_OBJECT(plus_btn), "clicked", 
-                          G_CALLBACK(set_color_swap), GINT_TO_POINTER(10));
+                          G_CALLBACK(set_color_swap), NULL);
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
@@ -738,9 +738,9 @@ void set_color_swap (GtkWidget* widget, gpointer data)
   old_color = atoi(num_old);
   const gchar *num_new = gtk_entry_get_text (GTK_ENTRY(new_color_entry));
   new_color = atoi(num_new);
-  int value = GPOINTER_TO_INT(data);
-  current_int_value = (current_int_value + value);
-  colorswap(current_file, "../img/new.bmp", old_color, new_color, current_int_value);
+  const gchar *tolerance = gtk_entry_get_text (GTK_ENTRY(plus_btn));
+  int value = atoi(tolerance);
+  colorswap(current_file, "../img/new.bmp", old_color, new_color, value);
   current_file = "../img/new.bmp";
   show_image("../img/new.bmp");
 }
@@ -883,14 +883,11 @@ int main (int    argc, char **argv)
   vbox = gtk_box_new(0,0);
   gtk_box_pack_start(GTK_BOX(vbox), menu_bar,1,0,0);
   
-  undo_button = gtk_button_new_with_label("UNDO");
   save_button = gtk_button_new_with_label("SAVE");
   
-  gtk_box_pack_start(GTK_BOX(vbox), undo_button,0,0,0);
   gtk_box_pack_start(GTK_BOX(vbox), save_button,10,0,0);
   gtk_layout_put(GTK_LAYOUT(layout), vbox, 0, 0);
   
-  g_signal_connect(G_OBJECT(undo_button), "clicked", G_CALLBACK(undo), NULL);
   g_signal_connect(G_OBJECT(save_button), "clicked", G_CALLBACK(save), NULL);
 
   gtk_widget_show_all(window);
