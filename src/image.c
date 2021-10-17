@@ -46,19 +46,23 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
             gtk_widget_destroy(fdialog);
           }
         } 
-    }/*
+    }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Save as") == 0)
     {
-      fdialog = create_filechooser_dialog(current_file, GTK_FILE_CHOOSER_ACTION_SAVE);
+      fdialog = create_filechooser_dialog("../img/new.bmp", GTK_FILE_CHOOSER_ACTION_SAVE);
 
       if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_OK){
-        current_file = 
+            GtkFileChooser *chooser = GTK_FILE_CHOOSER(fdialog);
+            char *filename = gtk_file_chooser_get_filename(chooser);
+            copy_bmp("../img/new.bmp", filename);
+            g_free(filename);
+            gtk_widget_destroy(fdialog);
       } else {
         if (gtk_dialog_run(GTK_DIALOG(fdialog)) == GTK_RESPONSE_CANCEL) {
             gtk_widget_destroy(fdialog);
           }
       }
-    }*/
+    }
     if(strcmp(gtk_menu_item_get_label(GTK_MENU_ITEM(menu_item)), "Brightness") == 0)  
     {
       manipulated = false;
@@ -801,11 +805,11 @@ int main (int    argc, char **argv)
   menu_item = gtk_menu_item_new_with_label("Open");
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
-  /*
+  
   menu_item = gtk_menu_item_new_with_label("Save as");
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
-  */
+  
   menu_item = gtk_menu_item_new_with_label("Exit");
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), menu_item);
   g_signal_connect(menu_item, "activate", G_CALLBACK(menu_response), NULL);
