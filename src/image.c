@@ -179,16 +179,18 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_destroy(old_color_entry);
         gtk_widget_destroy(new_color_entry);
 
-        plus_btn = gtk_button_new_with_label("+10");
-        minus_btn = gtk_button_new_with_label("-10");
+         // old_color_entry used as Tolerance
+        old_color_entry = gtk_entry_new();
+        gtk_entry_set_placeholder_text(GTK_ENTRY(old_color_entry), "Tolerance");
+        gtk_layout_put(GTK_LAYOUT(layout), old_color_entry, 200, height+150);
+
+
+        plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
-        gtk_layout_put(GTK_LAYOUT(layout), minus_btn, 100, height+150);
-        gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 200, height+150);
-        gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 300, height+150);
-        g_signal_connect (G_OBJECT(minus_btn), "clicked", 
-                          G_CALLBACK(set_exclusive_grayscale), GINT_TO_POINTER(-10));
+        gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 100, height+150);
+        gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 100, height+200);
         g_signal_connect (G_OBJECT(plus_btn), "clicked", 
-                          G_CALLBACK(set_exclusive_grayscale), GINT_TO_POINTER(10));
+                          G_CALLBACK(set_exclusive_grayscale), NULL);
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
@@ -213,12 +215,13 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         gtk_widget_destroy(old_color_entry);
         gtk_widget_destroy(new_color_entry);
 
+
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
         gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 100, height+150);
         gtk_layout_put(GTK_LAYOUT(layout), undo_btn, 200, height+150);
         g_signal_connect (G_OBJECT(plus_btn), "clicked", 
-                          G_CALLBACK(set_grayscale), GINT_TO_POINTER(1));
+                          G_CALLBACK(set_grayscale), NULL);
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
@@ -635,9 +638,9 @@ void set_exclusive_grayscale (GtkWidget* widget, gpointer data)
     save();
     manipulated = true;
   }
-  int value = GPOINTER_TO_INT(data);
-  current_int_value = (current_int_value + value);
-  exclusive_grayscale(current_file, "../img/new.bmp", current_int_value);
+  const gchar *tolerance = gtk_entry_get_text (GTK_ENTRY(old_color_entry));
+  int value = atoi(tolerance);  
+  exclusive_grayscale(current_file, "../img/new.bmp", value);
   current_file = "../img/new.bmp";
   show_image("../img/new.bmp");
 }
