@@ -544,30 +544,30 @@ void temperature(char input_path[], char output_path[], int value) {
 
 	uint32_t count = heightPx * widthPx;
 
-	value = value/2;
+	value = value / 2;
 
 		for (uint32_t x = 0; x < count; x++) {
 
 			bitmap_pixel_rgb_t* pix = &rgb_pixels[x];
 
-			if (pix->r + value >= 255) {
+			if (pix->r + 1.5 * value >= 255) {
 				pix->r = 255;
 			} 
-			else if (pix->r + value < 0) {
+			else if (pix->r + 1.5 * value < 0) {
 				pix->r = 0;
 			} 
 			else {
-				pix->r += value;
+				pix->r += 1.5 * value;
 			}
 
-			if (pix->g + value >= 255) {
+			if (pix->g + 0.5 * value >= 255) {
 				pix->g = 255;
 			} 
-			else if (pix->g + value < 0) {
+			else if (pix->g + 0.5 * value < 0) {
 				pix->g = 0;
 			} 
 			else {
-				pix->g += value;
+				pix->g += 0.5 * value;
 			}
 
 			if (pix->b - value <= 0) {
