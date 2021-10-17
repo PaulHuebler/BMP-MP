@@ -208,21 +208,18 @@ static int find_dominant_color() {
 	uint32_t count = heightPx * widthPx;
 	int current_max = 0;
 	int dominant_color = 255;
-	int counters[256];
+	int counters[256] = {0};
 
 	for (uint32_t x = 0; x < count; x++) {
 
-			bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
+		bitmap_pixel_hsv_t* pix = &hsv_pixels[x];
 
-			counters[pix->h]++;
-		}	
+		counters[pix->h]++;
+	}	
 
 	for (uint32_t x = 0; x <= 255; x++) {
 
-		// Ohne diese Ausgabe werden plötzlich ganz andere Werte als dominante Farbe ermittelt -> Quantentheorie? :o
-		printf("%d: %d | ", x, counters[x]);
-
-		if (counters[x] >= current_max) {
+		if (counters[x] > current_max) {
 
 			current_max = counters[x];
 			dominant_color = x;
@@ -233,6 +230,8 @@ static int find_dominant_color() {
 }
 
 void exclusive_grayscale(char input_path[], char output_path[], int tolerance) {
+
+	loadHSV(input_path);
 
 	uint32_t count = heightPx * widthPx;
 	int dominant_color = find_dominant_color();
@@ -246,6 +245,8 @@ void exclusive_grayscale(char input_path[], char output_path[], int tolerance) {
 			if (abs(pix->h - dominant_color) >= tolerance)
 				pix->s = 0;
 		}	
+
+	saveHSV(output_path);
 }
 
 // Select the color from the palette that exhibits the minimum Euclidean distance to the given pixel.
