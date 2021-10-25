@@ -69,11 +69,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         if (current_index < 0){
             printf("No image loaded!\n");
         } else { 
-            gtk_widget_destroy(plus_btn);          
-            gtk_widget_destroy(minus_btn);            
-            gtk_widget_destroy(undo_btn); 
-            gtk_widget_destroy(old_color_entry);
-            gtk_widget_destroy(new_color_entry);  
+            destroy_widgets(); 
 
             int p = 10;
             int m = -10;
@@ -90,7 +86,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
             g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                             G_CALLBACK(undo), NULL);
 
-            gtk_widget_destroy(frame_b);
 
             frame_b = gtk_frame_new("Brightness");
             gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -106,12 +101,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (current_index < 0){
           printf("No image loaded!\n");
       } else { 
-            gtk_widget_destroy(plus_btn);          
-            gtk_widget_destroy(minus_btn);            
-            gtk_widget_destroy(undo_btn);  
-            gtk_widget_destroy(old_color_entry);
-            gtk_widget_destroy(new_color_entry);          
-  
+            destroy_widgets();
             int p = 10;
             int m = -10;
             plus_btn = gtk_button_new_with_label("+10");
@@ -127,7 +117,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
             g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                               G_CALLBACK(undo), NULL);
 
-            gtk_widget_destroy(frame_b);
 
             frame_b = gtk_frame_new("Saturation");
             gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -143,12 +132,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (current_index < 0){
           printf("No image loaded!\n");
       } else {    
-        gtk_widget_destroy(plus_btn);          
-        gtk_widget_destroy(minus_btn);            
-        gtk_widget_destroy(undo_btn); 
-        gtk_widget_destroy(old_color_entry);
-        gtk_widget_destroy(new_color_entry);
-
+        destroy_widgets();
         plus_btn = gtk_button_new_with_label("+10");
         minus_btn = gtk_button_new_with_label("-10");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -162,7 +146,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
-        gtk_widget_destroy(frame_b);
 
         frame_b = gtk_frame_new("Contrast");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -177,12 +160,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (current_index < 0){
           printf("No image loaded!\n");
       } else {    
-        gtk_widget_destroy(plus_btn);          
-        gtk_widget_destroy(minus_btn);            
-        gtk_widget_destroy(undo_btn);
-        gtk_widget_destroy(old_color_entry);
-        gtk_widget_destroy(new_color_entry);
-
+        destroy_widgets();
          // old_color_entry used as Tolerance
         old_color_entry = gtk_entry_new();
         gtk_entry_set_placeholder_text(GTK_ENTRY(old_color_entry), "Tolerance");
@@ -198,7 +176,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
-        gtk_widget_destroy(frame_b);
 
         frame_b = gtk_frame_new("exclusive Grayscale");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -213,13 +190,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (current_index < 0){
           printf("No image loaded!\n");
       } else {    
-        gtk_widget_destroy(plus_btn);          
-        gtk_widget_destroy(minus_btn);            
-        gtk_widget_destroy(undo_btn); 
-        gtk_widget_destroy(old_color_entry);
-        gtk_widget_destroy(new_color_entry);
-
-
+        destroy_widgets();
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
         gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 100, height+150);
@@ -229,7 +200,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
-        gtk_widget_destroy(frame_b);
 
         frame_b = gtk_frame_new("Grayscale");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -244,12 +214,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (current_index < 0){
           printf("No image loaded!\n");
       } else {    
-        gtk_widget_destroy(plus_btn);          
-        gtk_widget_destroy(minus_btn);            
-        gtk_widget_destroy(undo_btn); 
-        gtk_widget_destroy(old_color_entry);
-        gtk_widget_destroy(new_color_entry);
-
+        destroy_widgets();
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
         gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 100, height+150);
@@ -259,7 +224,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
-        gtk_widget_destroy(frame_b);
 
         frame_b = gtk_frame_new("Floyd Steinberg");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -274,12 +238,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (current_index < 0){
           printf("No image loaded!\n");
       } else {    
-        gtk_widget_destroy(plus_btn);          
-        gtk_widget_destroy(minus_btn);            
-        gtk_widget_destroy(undo_btn); 
-        gtk_widget_destroy(old_color_entry);
-        gtk_widget_destroy(new_color_entry);
-
+        destroy_widgets();
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
         gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 100, height+150);
@@ -289,7 +248,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
-        gtk_widget_destroy(frame_b);
 
         frame_b = gtk_frame_new("Color Seperation");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -304,12 +262,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (current_index < 0){
           printf("No image loaded!\n");
       } else {    
-        gtk_widget_destroy(plus_btn);          
-        gtk_widget_destroy(minus_btn);            
-        gtk_widget_destroy(undo_btn); 
-        gtk_widget_destroy(old_color_entry);
-        gtk_widget_destroy(new_color_entry);
-
+        destroy_widgets();
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
         gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 100, height+150);
@@ -319,7 +272,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
-        gtk_widget_destroy(frame_b);
 
         frame_b = gtk_frame_new("Invert Colors");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -334,12 +286,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (current_index < 0){
           printf("No image loaded!\n");
       } else {    
-        gtk_widget_destroy(plus_btn);          
-        gtk_widget_destroy(minus_btn);            
-        gtk_widget_destroy(undo_btn); 
-        gtk_widget_destroy(old_color_entry);
-        gtk_widget_destroy(new_color_entry);
-
+        destroy_widgets();
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
         gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 100, height+150);
@@ -349,7 +296,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
-        gtk_widget_destroy(frame_b);
 
         frame_b = gtk_frame_new("Sepia");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -364,12 +310,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (current_index < 0){
           printf("No image loaded!\n");
       } else {    
-        gtk_widget_destroy(plus_btn);          
-        gtk_widget_destroy(minus_btn);            
-        gtk_widget_destroy(undo_btn); 
-        gtk_widget_destroy(old_color_entry);
-        gtk_widget_destroy(new_color_entry);
-
+        destroy_widgets();
         plus_btn = gtk_button_new_with_label("APPLY vertical");
         minus_btn = gtk_button_new_with_label("APPLY horizontal");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -383,7 +324,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
-        gtk_widget_destroy(frame_b);
 
         frame_b = gtk_frame_new("Mirror Image");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -398,12 +338,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (current_index < 0){
           printf("No image loaded!\n");
       } else {    
-        gtk_widget_destroy(plus_btn);          
-        gtk_widget_destroy(minus_btn);            
-        gtk_widget_destroy(undo_btn);
-        gtk_widget_destroy(old_color_entry);
-        gtk_widget_destroy(new_color_entry); 
-
+        destroy_widgets();
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
         gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 100, height+150);
@@ -413,7 +348,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
-        gtk_widget_destroy(frame_b);
 
         frame_b = gtk_frame_new("Gaussian Blur 2D");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -428,12 +362,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (current_index < 0){
           printf("No image loaded!\n");
       } else {    
-        gtk_widget_destroy(plus_btn);          
-        gtk_widget_destroy(minus_btn);            
-        gtk_widget_destroy(undo_btn); 
-        gtk_widget_destroy(old_color_entry);
-        gtk_widget_destroy(new_color_entry);
-
+        destroy_widgets();
         plus_btn = gtk_button_new_with_label("+10");
         minus_btn = gtk_button_new_with_label("-10");
         undo_btn = gtk_button_new_with_label("UNDO");
@@ -462,12 +391,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (current_index < 0){
           printf("No image loaded!\n");
       } else {    
-        gtk_widget_destroy(plus_btn);          
-        gtk_widget_destroy(minus_btn);            
-        gtk_widget_destroy(undo_btn);
-        gtk_widget_destroy(old_color_entry);
-        gtk_widget_destroy(new_color_entry);
-        
+        destroy_widgets();
         old_color_entry = gtk_entry_new();
         new_color_entry = gtk_entry_new();
         plus_btn = gtk_entry_new();
@@ -488,7 +412,13 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
-        gtk_widget_destroy(frame_b);
+        // Color - Chooser
+        rgba.red = 1.0; rgba.green = 1.0; rgba.blue = 1.0; rgba.alpha = 1.0;
+        color_chooser = gtk_color_button_new_with_rgba(&rgba);
+        gtk_layout_put(GTK_LAYOUT(layout), color_chooser, 400, height+200);
+        g_signal_connect (G_OBJECT(color_chooser), "clicked",
+                          G_CALLBACK(set_hsv_color), color_chooser);
+        
 
         frame_b = gtk_frame_new("Color Swap\t\t\t\t\t\t\t\t\t\told color:\t\t\t\t\tnew color:\t\t\t\t");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -503,12 +433,7 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
       if (current_index < 0){
           printf("No image loaded!\n");
       } else {    
-        gtk_widget_destroy(plus_btn);          
-        gtk_widget_destroy(minus_btn);            
-        gtk_widget_destroy(undo_btn); 
-        gtk_widget_destroy(old_color_entry);
-        gtk_widget_destroy(new_color_entry);
-
+        destroy_widgets();
         plus_btn = gtk_button_new_with_label("APPLY");
         undo_btn = gtk_button_new_with_label("UNDO");
         gtk_layout_put(GTK_LAYOUT(layout), plus_btn, 100, height+150);
@@ -518,7 +443,6 @@ static void menu_response(GtkWidget* menu_item, gpointer data)
         g_signal_connect (G_OBJECT(undo_btn), "clicked", 
                           G_CALLBACK(undo), NULL);
 
-        gtk_widget_destroy(frame_b);
 
         frame_b = gtk_frame_new("Sobel Edge Detection");
         gtk_frame_set_shadow_type(GTK_FRAME(frame_b), GTK_SHADOW_OUT);
@@ -580,8 +504,47 @@ void show_image (char *file_path)
   gtk_widget_show_all(window);
 }
 
+void set_hsv_color (GtkColorButton *b)
+{
+  color_picked++;
+  gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(b), &rgba);
+  printf("\n\n\n\n\nred = %f\n\n\n\n\n", rgba.red);
+  
+  // RGBA to HSV
+  float x_max, x_min, c, v;       // c- Chroma; v- Value
+  HsvColor hsv;
+
+  x_max = rgba.red;
+  if (rgba.green > x_max) rgba.green = x_max;
+  if (rgba.blue > x_max) rgba.blue = x_max;
+  v = x_max;
+
+    printf ("\n\n%f\n\n", v);
+
+  x_min = rgba.red;
+  if (rgba.green < x_min) rgba.green = x_min;
+  if (rgba.blue < x_min) rgba.blue = x_min;
+
+  c = x_max - x_min;
+
+  if (c == 0) hsv.hue = 0;
+
+  if (v == rgba.red) {
+    hsv.hue = 60 * (GPOINTER_TO_INT(((rgba.green - rgba.blue)/c)));
+  }
+  if (v == rgba.green) {
+    hsv.hue = (GPOINTER_TO_INT(60 * (2 + (rgba.blue - rgba.red)/c)));
+  }
+  if (v == rgba.blue) {
+    hsv.hue = (GPOINTER_TO_INT(60 * (4 + (rgba.red - rgba.green)/c)));
+  }
+
+  printf ("\n\n%d\n\n", hsv.hue);
+}
+
+
 /************************************^**********************************************************************************************************************************
-	UNDO / SAVE
+	UNDO / SAVE / Destroy Widgets
 **********************************************************************************************************************************************************************/
 
 void save () 
@@ -600,7 +563,18 @@ void undo ()
   current_int_value = 0;
 }
 
-/************************************^**********************************************************************************************************************************
+void destroy_widgets() 
+{
+  gtk_widget_destroy(plus_btn);          
+  gtk_widget_destroy(minus_btn);            
+  gtk_widget_destroy(undo_btn); 
+  gtk_widget_destroy(old_color_entry);
+  gtk_widget_destroy(new_color_entry); 
+  gtk_widget_destroy(color_chooser);
+  gtk_widget_destroy(frame_b);
+}
+
+/**********************************************************************************************************************************************************************
 	Callback to Manipulation functions
 **********************************************************************************************************************************************************************/
 
@@ -763,6 +737,7 @@ void set_sobel_edge_detection (GtkWidget* menu_item, gpointer data)
   current_file = "../img/new.bmp";
   show_image("../img/new.bmp");
 }
+
 /**********************************************************************************************************************************************************************
 	main()
 **********************************************************************************************************************************************************************/

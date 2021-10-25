@@ -11,7 +11,18 @@ static GtkWidget *image;
 static GtkWidget *frame_b;
 static GtkWidget *plus_btn, *minus_btn, *undo_btn;
 static GtkWidget *old_color_entry, *new_color_entry;
+static GtkWidget *color_chooser;
 
+static GdkRGBA rgba;
+
+typedef struct HsvColor
+{
+    int hue;
+    float saturation;
+    float value;
+} HsvColor;
+
+static int color_picked = 0;
 
 // start parameters for window
 int width = 500;
@@ -32,10 +43,14 @@ bool manipulated = false;
 // Funktionen zum Erstellen von Filechooserdialog und Imageabbildung
 GtkWidget * create_filechooser_dialog (char *init_path, GtkFileChooserAction action);
 static void show_image (char *file_path);
+void set_hsv_color ();
 
 // SAVE / UNDO 
 void save ();
 void undo ();
+
+// Destroy all widgets
+void destroy_widgets();
 
 
 // Funktionen zum aufrufen der Manipulations und deren Speicherung
